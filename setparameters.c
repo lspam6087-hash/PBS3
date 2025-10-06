@@ -34,6 +34,10 @@ void set_parameters(struct Parameters *p_parameters)
   p_parameters->num_dt_restart = 1000;                      // number of time steps between saves
   strcpy(p_parameters->restart_out_filename, "restart.dat");//filename for saved restart file
 
+  p_parameters->nbin = 100;                                 //Number of bins
+  p_parameters->grcount = 0;                                //Counter of calls to update_gr 
+  p_parameters->dbin = 0.5*p_parameters->L.x/p_parameters->nbin; //Bin width
+
 
   if (p_parameters->r_cut > p_parameters->L.x / 2.0)
     fprintf(stderr, "Warning! r_cut > Lx/2");

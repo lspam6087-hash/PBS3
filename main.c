@@ -34,7 +34,9 @@
 #include "forces.h" 
 #include "dynamics.h" 
 #include "memory.h" 
-#include "fileoutput.h" 
+#include "fileoutput.h"
+#include "vector_functions.h"
+#include "grf.h" 
 
 /** 
  * @brief Main MD simulation code. After initialization, 
@@ -91,6 +93,8 @@ int main(void)
     // Output initial particle positions in PDB format
     record_trajectories_pdb(1, &parameters, &vectors, time); 
 
+    initialise_grf(&parameters, &vectors);
+
     // Main MD loop using velocity-Verlet integration
     while (step < parameters.num_dt_steps) 
     { 
@@ -119,6 +123,10 @@ int main(void)
         // Final velocity update (half-step)
         Ekin = update_velocities_half_dt(&parameters, &nbrlist, &vectors); 
 
+
+        // Update the GRF (op hoop van zege)
+        update_grf(&parameters, &vectors);
+
         // Output system state every 'num_dt_pdb' steps
         if (step % parameters.num_dt_pdb == 0) 
             record_trajectories_pdb(0, &parameters, &vectors, time); 
@@ -131,8 +139,12 @@ int main(void)
 
         // Print to the screen to monitor the progress of the simulation
         /// \todo Write the output (also) to file, and extend the output with temperature
-        printf("Step %lu, Time %f, Epot %f, Ekin %f, Etot %f\n", (long unsigned)step, time, Epot, Ekin, Epot + Ekin);
+        // printf("Step %lu, Time %f, Epot %f, Ekin %f, Etot %f\n", (long unsigned)step, time, Epot, Ekin, Epot + Ekin);
     } 
+
+    // 
+    finalise_grf(&parameters, &vectors);
+
 
     // Save final state
     save_restart(&parameters, &vectors); 

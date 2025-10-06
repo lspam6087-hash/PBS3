@@ -58,6 +58,15 @@ double calculate_forces_bond(struct Parameters *p_parameters, struct Vectors *p_
 
         /// \todo Provide the bond force calculation and assign forces to particles i and j
 
+        // Determining the bead-spring force
+        double r_cut = p_parameters->r_cut;
+        double KbT = 1;                     // \todo Change this parameter if necessary
+        double C = 2 * KbT * pow(r_cut, -2);
+
+        fi.x = -C * rij.x;
+        fi.y = -C * rij.y;
+        fi.z = -C * rij.z;
+
         f[i].x += fi.x;
         f[i].y += fi.y;
         f[i].z += fi.z;

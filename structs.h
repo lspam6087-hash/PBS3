@@ -31,6 +31,9 @@ struct Parameters
     double a_ij;             //!< Repulsion parameter
     double T;                //!< Temperature
     double delta_a;          //!< Excess repulsion
+    size_t nbin;             //!< Number of bins
+    double dbin;             //!< Bin width
+    size_t grcount;          //!< Counter of calls to update_gr
     double r_cut;            //!< Cut-off distance for LJ interaction
     double r_shell;          //!< Shell thickness for neighbor list
     size_t num_dt_pdb;       //!< Number of time steps between pdb saves
@@ -118,6 +121,7 @@ struct Vectors
     struct Bond *bonds;         //!< bonds
     struct Angle *angles;       //!< angles
     struct Dihedral *dihedrals; //!< dihedrals
+    double *grbin;              //!< Radial distribution initialisation
 };
 
 /**
