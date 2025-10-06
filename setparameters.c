@@ -24,7 +24,7 @@ void set_parameters(struct Parameters *p_parameters)
   p_parameters->exclude_13_nb = 0;                          // 1-3 connected atoms exluded from non-bonded interactions    
   p_parameters->dt = 0.01;                                  //integration time step
   p_parameters->L = (struct Vec3D){14.938, 14.938, 14.938}; //box size
-    p_parameters->r_cut = 1.0;                              //cut-off distance used for neigbor list
+  p_parameters->r_cut = 1.0;                              //cut-off distance used for neigbor list
   p_parameters->r_shell = 0.4;                              //shell thickness for neighbor list
   p_parameters->num_dt_pdb = 500;                           //number of time steps in between pdb outputs
   strcpy(p_parameters->filename_pdb, "trajectories");       //filename (without extension) for pdb file
@@ -34,10 +34,9 @@ void set_parameters(struct Parameters *p_parameters)
   p_parameters->num_dt_restart = 1000;                      // number of time steps between saves
   strcpy(p_parameters->restart_out_filename, "restart.dat");//filename for saved restart file
 
-  p_parameters->nbin = 100;                                 //Number of bins
+  p_parameters->nbin = (int)sqrt(p_parameters->num_part);                                //Number of bins
   p_parameters->grcount = 0;                                //Counter of calls to update_gr 
   p_parameters->dbin = 0.5*p_parameters->L.x/p_parameters->nbin; //Bin width
-
 
   if (p_parameters->r_cut > p_parameters->L.x / 2.0)
     fprintf(stderr, "Warning! r_cut > Lx/2");

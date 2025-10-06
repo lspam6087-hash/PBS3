@@ -27,7 +27,7 @@ void initialise_grf(struct Parameters *p_parameter, struct Vectors *p_vectors){
 }
 
 // Update
-void update_grf(struct Parameters *p_parameter, struct Vectors *p_vectors){
+double update_grf(struct Parameters *p_parameter, struct Vectors *p_vectors){
     size_t grcount = p_parameter->grcount;
     struct Bond *bonds = p_vectors->bonds;
     size_t num_bonds = p_vectors->num_bonds;
@@ -62,22 +62,32 @@ void update_grf(struct Parameters *p_parameter, struct Vectors *p_vectors){
 
         grcount += 1;
     }
+    return grcount;
 }
 
 // Finalize
-void finalise_grf(struct Parameters *p_parameter, struct Vectors *p_vectors){
+void finalise_grf(struct Parameters *p_parameter, struct Vectors *p_vectors, double grcount){
     size_t N = p_parameter->num_part;
     struct Vec3D L = p_parameter->L;
     size_t nbin = p_parameter->nbin;
     double dbin = p_parameter->dbin;
     double *grbin = p_vectors->grbin;
-    size_t grcount = p_parameter->grcount;
     double volume = 0.0;
     double rho = (N-1)/(L.x*L.y*L.z);
+
 
     for(size_t i=0; i<(nbin-1); i++){
         volume = 4/3 * PI * ((i+1)*(i+1)*(i+1) - (i)*(i)*(i)) * dbin*dbin*dbin;
         grbin[i] = grbin[i] / (rho * volume * grcount * N);
-        printf("%d, %f\n", (i+0.5)*dbin, grbin[i]);
+        // printf("%d, %f\n", (i+0.5)*dbin, grbin[i]);
+        // double dummy = (i+0.5)*dbin;
+        // double dummy2 = grbin[i];
+        if(i == 0){
+            FILE* fp = fopen("data/grf_data.dat", "w");
+            fprintf(fp, "%.8f %.12f\n", (i+0.5)*dbin, grbin[i]);
+        } else {
+            FILE* fp = fopen("data/grf_data.dat", "a");
+            fprintf(fp, "%.8f %.12f\n", (i+0.5)*dbin, grbin[i]);
+        }
     }
 }

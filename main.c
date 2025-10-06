@@ -60,7 +60,7 @@ int main(void)
     struct Parameters parameters; 
     struct Nbrlist nbrlist; 
     size_t step; 
-    double Ekin, Epot, time; 
+    double Ekin, Epot, time, grcount; 
 
     // Step 1: Set the simulation parameters from input files
     set_parameters(&parameters); 
@@ -125,7 +125,7 @@ int main(void)
 
 
         // Update the GRF (op hoop van zege)
-        update_grf(&parameters, &vectors);
+        grcount = update_grf(&parameters, &vectors);
 
         // Output system state every 'num_dt_pdb' steps
         if (step % parameters.num_dt_pdb == 0) 
@@ -143,7 +143,7 @@ int main(void)
     } 
 
     // 
-    finalise_grf(&parameters, &vectors);
+    finalise_grf(&parameters, &vectors, grcount);
 
 
     // Save final state
