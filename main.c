@@ -38,6 +38,8 @@
 #include "vector_functions.h"
 #include "grf.h" 
 
+#define INCLUDE_FORCES // If B2 needs to be checked. This needs to be commented
+
 /** 
  * @brief Main MD simulation code. After initialization, 
  * a velocity-Verlet scheme is executed for a specified number of time steps. 
@@ -139,7 +141,7 @@ int main(void)
 
         // Print to the screen to monitor the progress of the simulation
         /// \todo Write the output (also) to file, and extend the output with temperature
-        // printf("Step %lu, Time %f, Epot %f, Ekin %f, Etot %f\n", (long unsigned)step, time, Epot, Ekin, Epot + Ekin);
+        printf("Step %lu, Time %f, Epot %f, Ekin %f, Etot %f\n", (long unsigned)step, time, Epot, Ekin, Epot + Ekin);
     } 
 
     // 

@@ -8,6 +8,10 @@
 #include "vector_functions.h"
 #include "random.h"
 
+#define INCLUDE_CONSERVATIVE
+#define INCLUDE_DISSIPATIVE
+#define INCLUDE_RANDOM
+
 // This function calculates all forces acting on the particles (bonded and non-bonded).
 // It initializes the forces array, then calculates bond-stretch, angle-bend, dihedral-torsion,
 // and non-bonded forces. The total potential energy is returned.
@@ -22,7 +26,7 @@ double calculate_forces(struct Parameters *p_parameters, struct Nbrlist *p_nbrli
 
     // Calculate the forces and accumulate the potential energy from each type of interaction
     double Epot = 0.0;
-    // Epot = calculate_forces_bond(p_parameters, p_vectors);
+    Epot = calculate_forces_bond(p_parameters, p_vectors);
     Epot += calculate_forces_nb(p_parameters, p_nbrlist, p_vectors);
     
     return Epot;
@@ -136,6 +140,7 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
         // Compute forces if the distance is smaller than the cutoff distance
         if (rij.sq < r_cutsq)
         {
+            #ifdef INCLUDE_CONSERVATIVE
             /// \todo Make the LJ parameters type-dependent (CH3 and CH2)
 
             df_c.x = a_ij * (1 - rij_norm) * rij.x;
@@ -149,11 +154,12 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
             f[j].x -= df_c.x;
             f[j].y -= df_c.y;
             f[j].z -= df_c.z; 
+            #endif
 
             // Determine the potential energy of the conservative forces
             Epot += a_ij / 2 * (1-rij_norm)*(1-rij_norm);
 
-
+            #ifdef INCLUDE_DISSIPATIVE
             /// \todo Hier moeten de random forces nog ingezet worden
             // Dissipative forces
             struct Vec3D vij = {0.0, 0.0, 0.0};
@@ -176,7 +182,9 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
             f[j].x -= df_d.x;
             f[j].y -= df_d.y;
             f[j].z -= df_d.z;
+            #endif
 
+            #ifdef INCLUDE_RANDOM
             // Random forces
             double sigma = 3; // From the assignment
             double w_R = pow(w_D, 0.5); //Weight function
@@ -192,6 +200,7 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
             f[j].x -= df_r.x;
             f[j].y -= df_r.y;
             f[j].z -= df_r.z;
+            #endif
         }          
     }
     return Epot;  // Return the potential energy due to non-bonded interactions
