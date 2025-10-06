@@ -11,9 +11,20 @@
 // later to initialize different types (e.g., methane and ethane in a binary mixture).
 void initialise_types(struct Parameters *p_parameters, struct Vectors *p_vectors)
 {
-    /// \todo Initialize particle types in the vectors.type array
-    for (size_t i = 0; i < p_parameters->num_part; i++)
-        p_vectors->type[i] = 0; // Specify particle type (currently only one type)
+    //Declaring variables
+    int molecules = p_parameters->num_part/4;       
+
+    if (molecules >= 1)
+    {
+        //Looping over all molecules to declare the type (CH3 or CH2)
+        for (size_t i = 0; i < molecules; i++)
+        {
+            p_vectors->type[i*4] = 0; // CH3
+            p_vectors->type[i*4 + 1] = 1; //CH2
+            p_vectors->type[i*4 + 2] = 1; //CH2
+            p_vectors->type[i*4 + 3] = 0; //CH3
+        }
+    }
 }
 
 // This function initializes the bond connectivity between particles.
