@@ -160,7 +160,6 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
             Epot += a_ij / 2 * (1-rij_norm)*(1-rij_norm);
 
             #ifdef INCLUDE_DISSIPATIVE
-            /// \todo Hier moeten de random forces nog ingezet worden
             // Dissipative forces
             struct Vec3D vij = {0.0, 0.0, 0.0};
             double gamma = 4.5; // From the assignment

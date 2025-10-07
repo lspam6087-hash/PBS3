@@ -7,6 +7,6 @@
  * 
  * @param[out] p_parameters Parameters of the simulation.
  */
-void set_parameters(struct Parameters * p_parameters);
+void set_parameters(struct Parameters * p_parameters, struct VelHist *p_vhist);
 
 #endif /* SETPARAMETERS_H_ */

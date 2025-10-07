@@ -5,26 +5,49 @@
 #include "constants.h"
 #include "structs.h"
 
+double box_size(struct Parameters *p_parameters)
+{
+  size_t n_part = p_parameters->num_part;
+  double rho = p_parameters->rho;
+  double N_A = 6.022e23;
+  double total_mass = (2*p_parameters->mass[0] + 2*p_parameters->mass[1])*1.0e-3;
+  double r_cut = p_parameters->r_cut;
+  double L, L3;
+
+  //Calculation of box size
+  L3 = total_mass * n_part/(rho * N_A);
+  L = pow(L3, 1.0/3.0)/(1.0e-10); //Conversion to [A]
+
+  if (L < 2*r_cut)
+    L = 2*r_cut;
+
+  return L;
+}
+
 // Set the parameters of this simulation
-void set_parameters(struct Parameters *p_parameters)
+void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
 {
 // The parameters first 5 parameters are only used for demonstration puprposes
   p_parameters->kT = 1.0;                                   //thermal energy
-  p_parameters->mass = 1.0;                                 //mass of a particle
+  p_parameters->mass[0] = 12.01 + 3*1.008;                  //mass of a CH3 particle
+  p_parameters->mass[1] = 12.01 + 2*1.008;                  //mass of a CH2 particle
   p_parameters->epsilon = 1.0;                              //LJ interaction strength
   p_parameters->sigma = 1.0;                                //LJ particle diameter
   p_parameters->a_ij = 0.0;                                 //Repulsion parameter
   p_parameters->T = 298.0;                                  //[K] Temperature
   p_parameters->delta_a = 1.0;                              //Excess repulsion
+  p_parameters->rho = 600;                                  //Density butane
 
 // The parameters below control core functionalities of the code, but many values will need to be changed
   p_parameters->num_part = 560;                            //number of particles
-  p_parameters->num_dt_steps = 20000;                        //number of time steps
+  p_parameters->num_dt_steps = 10000;                        //number of time steps
+  p_parameters->sample_interval = 10;                       // Sample interval
   p_parameters->exclude_12_nb = 0;                          // 1-2 connected atoms exluded from non-bonded interactions 
   p_parameters->exclude_13_nb = 0;                          // 1-3 connected atoms exluded from non-bonded interactions    
   p_parameters->dt = 0.01;                                  //integration time step
-  p_parameters->L = (struct Vec3D){14.938, 14.938, 14.938}; //box size
   p_parameters->r_cut = 1.0;                                //cut-off distance used for neigbor list
+  double Lbox = box_size(p_parameters);
+  p_parameters->L = (struct Vec3D){ Lbox, Lbox, Lbox };     //Box size
   p_parameters->r_shell = 0.4;                              //shell thickness for neighbor list
   p_parameters->num_dt_pdb = 500;                           //number of time steps in between pdb outputs
   strcpy(p_parameters->filename_pdb, "trajectories");       //filename (without extension) for pdb file
@@ -37,6 +60,12 @@ void set_parameters(struct Parameters *p_parameters)
   p_parameters->nbin = (int)sqrt(p_parameters->num_part);                                //Number of bins
   p_parameters->grcount = 0;                                //Counter of calls to update_gr 
   p_parameters->dbin = 0.5*p_parameters->L.x/p_parameters->nbin; //Bin width
+
+  p_vhist->nbins = 15;                                      //Number of bins
+  p_vhist->vmin = 0.0;                                      //Min velocity
+  p_vhist->vmax = 30.0;                                     //Max velocity
+  p_vhist->bin_width = (p_vhist->vmax-p_vhist->vmin)/p_vhist->nbins;
+  p_vhist->total_counts = 0.0;
 
   if (p_parameters->r_cut > p_parameters->L.x / 2.0)
     fprintf(stderr, "Warning! r_cut > Lx/2");

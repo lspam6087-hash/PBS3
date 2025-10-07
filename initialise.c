@@ -244,12 +244,13 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
 // The total momentum is also removed to ensure zero total momentum (important for stability).
 void initialise_velocities(struct Parameters *p_parameters, struct Vectors *p_vectors)
 {
-    double sqrtktm = sqrt(p_parameters->kT / p_parameters->mass);
     struct Vec3D sumv = {0.0, 0.0, 0.0};  // Total velocity (to remove later)
 
     // Assign random velocities to each particle
     for (size_t i = 0; i < p_parameters->num_part; i++)
     {
+        size_t type_i = p_vectors->type[i];
+        double sqrtktm = sqrt(p_parameters->kT / p_parameters->mass[type_i]);
         p_vectors->v[i].x = sqrtktm * gauss();
         p_vectors->v[i].y = sqrtktm * gauss();
         p_vectors->v[i].z = sqrtktm * gauss();

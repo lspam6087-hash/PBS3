@@ -37,8 +37,10 @@
 #include "fileoutput.h"
 #include "vector_functions.h"
 #include "grf.h" 
+#include "histogram.h"
 
 #define INCLUDE_FORCES // If B2 needs to be checked. This needs to be commented
+#define HISTOGRAM
 
 /** 
  * @brief Main MD simulation code. After initialization, 
@@ -61,19 +63,20 @@ int main(void)
     struct Vectors vectors; 
     struct Parameters parameters; 
     struct Nbrlist nbrlist; 
+    struct VelHist p_vhist;
     size_t step; 
     double Ekin, Epot, time, grcount; 
 
     // Step 1: Set the simulation parameters from input files
-    set_parameters(&parameters); 
+    set_parameters(&parameters, &p_vhist); 
 
     // Step 2: Allocate memory for particles, forces, and neighbor lists
-    alloc_memory(&parameters, &vectors, &nbrlist); 
+    alloc_memory(&parameters, &vectors, &nbrlist, &p_vhist); 
 
     // Check if a restart is required
     if (parameters.load_restart == 1) 
     { 
-        load_restart(&parameters, &vectors); 
+        load_restart(&parameters, &vectors, &p_vhist); 
         initialise_structure(&parameters, &vectors, &nbrlist); 
         step = 0; 
         time = 0.0; 
@@ -96,6 +99,11 @@ int main(void)
     record_trajectories_pdb(1, &parameters, &vectors, time); 
 
     initialise_grf(&parameters, &vectors);
+
+    #ifdef HISTOGRAM
+            // Include the data for the histogram
+            write_hist(&parameters, &vectors, step, &p_vhist);
+    #endif
 
     // Main MD loop using velocity-Verlet integration
     while (step < parameters.num_dt_steps) 
@@ -137,7 +145,10 @@ int main(void)
             save_restart(&parameters, &vectors); 
 
         /// \todo Implement on-the-fly analysis of velocity distribution, torsion angle distribution and mean-square displacement
-
+        #ifdef HISTOGRAM
+            // Include the data for the histogram
+            write_hist(&parameters, &vectors, step, &p_vhist);
+        #endif
         // Print to the screen to monitor the progress of the simulation
         /// \todo Write the output (also) to file, and extend the output with temperature
         printf("Step %lu, Time %f, Epot %f, Ekin %f, Etot %f\n", (long unsigned)step, time, Epot, Ekin, Epot + Ekin);
@@ -154,7 +165,7 @@ int main(void)
     save_restart(&parameters, &vectors); 
 
     // Step 5: Free memory and clean up
-    free_memory(&vectors, &nbrlist); 
+    free_memory(&vectors, &nbrlist, &p_vhist); 
 
     return 0; 
 }

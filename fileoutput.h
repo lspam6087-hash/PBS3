@@ -33,12 +33,12 @@ void save_restart(struct Parameters *p_parameters, struct Vectors *p_vectors);
  * @param p_parameters 
  * @param p_vectors 
  */
-void load_restart(struct Parameters *p_parameters, struct Vectors *p_vectors);
+void load_restart(struct Parameters *p_parameters, struct Vectors *p_vectors, struct VelHist *p_vhist);
 
 /**
  * @brief Save the parameters to a csv file
  * 
- * @param 
+ * @param reset
  * @param p_parameters 
  * @param p_vectors 
  */

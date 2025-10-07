@@ -82,13 +82,13 @@ void save_restart(struct Parameters *p_parameters, struct Vectors *p_vectors)
 }
 
 // load arrays in vectors from binary file
-void load_restart(struct Parameters *p_parameters, struct Vectors *p_vectors)
+void load_restart(struct Parameters *p_parameters, struct Vectors *p_vectors, struct VelHist *p_vhist)
 {
   FILE* p_file = fopen( p_parameters->restart_in_filename, "rb" );
   size_t num_part;
   fread(&num_part, sizeof(size_t), 1, p_file);
   size_t sz = num_part*sizeof(struct Vec3D);
-  alloc_vectors(p_vectors,num_part);
+  alloc_vectors(p_vectors,p_parameters,num_part,p_vhist);
   p_parameters->num_part = num_part;
   fread(p_vectors->r, sz, 1, p_file);
   fread(p_vectors->v, sz, 1, p_file);

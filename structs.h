@@ -25,11 +25,12 @@ struct Parameters
     int exclude_12_nb;       //!< If true (=1) 1-2 connected atoms are exluded from non-bonded interactions 
     int exclude_13_nb;       //!< If true (-1) 1-3 connected atoms are exluded from non-bonded interactions    
     double kT;               //!< Thermal energy
-    double mass;             //!< Mass of a particle
+    double mass[2];             //!< Mass of a particle
     double epsilon;          //!< LJ interaction strength
     double sigma;            //!< LJ particle diameter
     double a_ij;             //!< Repulsion parameter
     double T;                //!< Temperature
+    double rho;              //!< Density
     double delta_a;          //!< Excess repulsion
     size_t nbin;             //!< Number of bins
     double dbin;             //!< Bin width
@@ -44,6 +45,10 @@ struct Parameters
     size_t num_dt_restart;   //!< Number of time steps between saves of restart file
     char restart_in_filename[1024];  //!< filename for loaded restart file
     char restart_out_filename[1024]; //!< filename for saved restart file
+
+    size_t nbins;
+    double hist_vmax;
+    size_t sample_interval;
 };
 
 /**
@@ -150,6 +155,19 @@ struct Nbrlist
     size_t *head12, *pairs12;          //!< list of 12 bonded pairs
     size_t *head13, *pairs13;          //!< list of 13 bonded pairs
     size_t *head14, *pairs14;          //!< list of 14 bonded pairs
+};
+
+/**
+ * @brief Struct to store data for a histogram
+ * 
+ */
+struct VelHist
+{
+    size_t nbins;               //!< Number of bins
+    double vmin, vmax;          //!< Range in speed units
+    double bin_width;           //!< Width of the bins
+    double *counts;      //!< Counts per bin
+    double total_counts; //!< Total samples added
 };
 
 #endif /* TYPES_MD_H_ */

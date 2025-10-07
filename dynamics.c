@@ -47,22 +47,24 @@ double update_velocities_half_dt(struct Parameters *p_parameters, struct Nbrlist
 {
     double Ekin = 0.0;  // Initialize kinetic energy
     /// \todo Make sure type-specific particle masses are used
-    const double factor = 0.5 / p_parameters->mass * p_parameters->dt;  // Factor for velocity update
     struct Vec3D *v = p_vectors->v;  // Particle velocities
     struct Vec3D *f = p_vectors->f;  // Forces acting on particles
 
     // Loop over all particles and update their velocities
     for (size_t i = 0; i < p_parameters->num_part; i++)
     {
+        size_t type_i = p_vectors->type[i];
+        const double factor = 0.5 / p_parameters->mass[type_i] * p_parameters->dt;  // Factor for velocity update
         v[i].x += factor * f[i].x;  // Update velocity in x-direction
         v[i].y += factor * f[i].y;  // Update velocity in y-direction
         v[i].z += factor * f[i].z;  // Update velocity in z-direction
-        Ekin += v[i].x * v[i].x + v[i].y * v[i].y + v[i].z * v[i].z;  // Accumulate kinetic energy
+        Ekin += (v[i].x * v[i].x + v[i].y * v[i].y + v[i].z * v[i].z)* p_parameters->mass[type_i];  // Accumulate kinetic energy
+        
     }
-
+    Ekin = 0.5 * Ekin;
     // Final kinetic energy calculation
     /// \todo Make sure type-specific particle masses are used
-    Ekin = 0.5 * Ekin * p_parameters->mass;
+    
     return Ekin;  // Return the system's kinetic energy
 }
 

@@ -4,7 +4,7 @@
 #include "nbrlist.h"
 
 // Allocate the arrays in 'vectors' needed to store information of all particles
-void alloc_vectors(struct Vectors *p_vectors, struct Parameters *p_parameters, size_t sz)
+void alloc_vectors(struct Vectors *p_vectors, struct Parameters *p_parameters, size_t sz, struct VelHist *p_vhist)
 {
     size_t nbin = p_parameters->nbin;
     p_vectors->size = sz;
@@ -20,10 +20,11 @@ void alloc_vectors(struct Vectors *p_vectors, struct Parameters *p_parameters, s
     p_vectors->num_angles = 0;
     p_vectors->dihedrals = NULL;
     p_vectors->num_dihedrals = 0;
+    p_vhist->counts = (double *)malloc(nbin * sizeof(double));
 }
 
 // Free the arrays in 'vectors'
-void free_vectors(struct Vectors *p_vectors)
+void free_vectors(struct Vectors *p_vectors, struct VelHist *p_vhist)
 {
     free(p_vectors->type);
     p_vectors->type = NULL;
@@ -43,6 +44,8 @@ void free_vectors(struct Vectors *p_vectors)
     p_vectors->dihedrals = NULL;
     free(p_vectors->grbin);
     p_vectors->grbin = NULL;
+    free(p_vhist->counts);
+    p_vhist->counts = NULL;
     p_vectors->size = 0;
     p_vectors->num_bonds = 0;
     p_vectors->num_angles = 0;
@@ -50,15 +53,15 @@ void free_vectors(struct Vectors *p_vectors)
 }
 
 // Allocate all variables needed in the MD simulation
-void alloc_memory(struct Parameters *p_parameters, struct Vectors *p_vectors, struct Nbrlist *p_nbrlist)
+void alloc_memory(struct Parameters *p_parameters, struct Vectors *p_vectors, struct Nbrlist *p_nbrlist, struct VelHist *p_vhist)
 {    
-    alloc_vectors(p_vectors, p_parameters, p_parameters->num_part);
+    alloc_vectors(p_vectors, p_parameters, p_parameters->num_part, p_vhist);
     alloc_nbrlist(p_parameters, p_nbrlist);
 }
 
 // Free the memory allocated by alloc_memory
-void free_memory(struct Vectors *p_vectors, struct Nbrlist *p_nbrlist)
+void free_memory(struct Vectors *p_vectors, struct Nbrlist *p_nbrlist, struct VelHist *p_vhist)
 {
-    free_vectors(p_vectors);
+    free_vectors(p_vectors, p_vhist);
     free_nbrlist(p_nbrlist);
 }
