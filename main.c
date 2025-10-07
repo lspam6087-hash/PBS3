@@ -125,8 +125,7 @@ int main(void)
         // Final velocity update (half-step)
         Ekin = update_velocities_half_dt(&parameters, &nbrlist, &vectors); 
 
-
-        // Update the GRF (op hoop van zege)
+        // Update the GRF
         grcount = update_grf(&parameters, &vectors);
 
         // Output system state every 'num_dt_pdb' steps
@@ -142,6 +141,9 @@ int main(void)
         // Print to the screen to monitor the progress of the simulation
         /// \todo Write the output (also) to file, and extend the output with temperature
         printf("Step %lu, Time %f, Epot %f, Ekin %f, Etot %f\n", (long unsigned)step, time, Epot, Ekin, Epot + Ekin);
+
+        // Save the relevant parameters for later data analysis
+        record_diagnostics_csv((step == 1) ? 1 : 0, &parameters, time ,Ekin, Epot); 
     } 
 
     // 

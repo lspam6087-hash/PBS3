@@ -95,3 +95,23 @@ void load_restart(struct Parameters *p_parameters, struct Vectors *p_vectors)
   fread(p_vectors->f, sz, 1, p_file);
   fclose(p_file);
 }
+
+// Write diagnostic data (energies) to CSV file
+void record_diagnostics_csv(int reset, struct Parameters *p_parameters, double time, double kin_energy, double pot_energy)
+{
+    FILE *fp_diag;
+
+    if (reset == 1) {
+      // Print the header
+      fp_diag = fopen("data/diagnostics.csv", "w");
+      fprintf(fp_diag, "time,kinetic_energy,potential_energy,total_energy\n");
+    } else {
+      // Print data to the file
+      fp_diag = fopen("data/diagnostics.csv", "a");
+    }
+
+    fprintf(fp_diag, "%f,%f,%f,%f,%f\n",
+            time, kin_energy, pot_energy, kin_energy + pot_energy);
+
+    fclose(fp_diag);
+}
