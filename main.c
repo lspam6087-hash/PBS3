@@ -133,7 +133,8 @@ int main(void)
         Ekin = update_velocities_half_dt(&parameters, &nbrlist, &vectors); 
 
         // Update the GRF
-        grcount = update_grf(&parameters, &vectors);
+        // grcount = update_grf(&parameters, &vectors);
+        grcount = update_grf2(&parameters, &nbrlist, &vectors);
 
         // Update the Histogram
         update_hist(&parameters, &vectors, step, &p_vhist);

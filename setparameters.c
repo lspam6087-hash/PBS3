@@ -29,25 +29,25 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
 {
 // The parameters first 5 parameters are only used for demonstration puprposes
   p_parameters->kT = 1.0;                                   //thermal energy
-  p_parameters->mass[0] = 12.01 + 3*1.008;                  //mass of a CH3 particle
-  p_parameters->mass[1] = 12.01 + 2*1.008;                  //mass of a CH2 particle
+  p_parameters->mass[0] = 1.0;                  //mass of a CH3 particle
+  p_parameters->mass[1] = 1.0;                  //mass of a CH2 particle
   p_parameters->epsilon = 1.0;                              //LJ interaction strength
   p_parameters->sigma = 1.0;                                //LJ particle diameter
   p_parameters->a_ij = 0.0;                                 //Repulsion parameter
   p_parameters->T = 298.0;                                  //[K] Temperature
   p_parameters->delta_a = 1.0;                              //Excess repulsion
-  p_parameters->rho = 600;                                  //Density butane
+  p_parameters->rho = 3;                                    //Number density
 
 // The parameters below control core functionalities of the code, but many values will need to be changed
-  p_parameters->num_part = 560;                            //number of particles
-  p_parameters->num_dt_steps = 10000;                        //number of time steps
+  p_parameters->num_part = 376;                            //number of particles
+  p_parameters->num_dt_steps = 25000;                        //number of time steps
   p_parameters->sample_interval = 10;                       // Sample interval
   p_parameters->exclude_12_nb = 0;                          // 1-2 connected atoms exluded from non-bonded interactions 
   p_parameters->exclude_13_nb = 0;                          // 1-3 connected atoms exluded from non-bonded interactions    
-  p_parameters->dt = 0.01;                                  //integration time step
+  p_parameters->dt = 0.04;                                  //integration time step
   p_parameters->r_cut = 1.0;                                //cut-off distance used for neigbor list
   double Lbox = box_size(p_parameters);
-  p_parameters->L = (struct Vec3D){ Lbox, Lbox, Lbox };     //Box size
+  p_parameters->L = (struct Vec3D){5.0, 5.0, 5.0};         //Box size
   p_parameters->r_shell = 0.4;                              //shell thickness for neighbor list
   p_parameters->num_dt_pdb = 500;                           //number of time steps in between pdb outputs
   strcpy(p_parameters->filename_pdb, "trajectories");       //filename (without extension) for pdb file
@@ -58,11 +58,11 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
   p_parameters->num_dt_restart = 1000;                      // number of time steps between saves
   strcpy(p_parameters->restart_out_filename, "restart.dat");//filename for saved restart file
 
-  p_parameters->nbin = (int)sqrt(p_parameters->num_part);                                //Number of bins
+  p_parameters->nbin = 100;//(int)sqrt(p_parameters->num_part);                                //Number of bins
   p_parameters->grcount = 0;                                //Counter of calls to update_gr 
-  p_parameters->dbin = 0.5*p_parameters->L.x/p_parameters->nbin; //Bin width
+  p_parameters->dbin = p_parameters->r_cut/p_parameters->nbin; //Bin width
 
-  p_vhist->nbins = 15;                                      //Number of bins
+  p_vhist->nbins = 100;                                      //Number of bins
   p_vhist->vmin = 0.0;                                      //Min velocity
   p_vhist->vmax = 30.0;                                     //Max velocity
   p_vhist->bin_width = (p_vhist->vmax-p_vhist->vmin)/p_vhist->nbins;

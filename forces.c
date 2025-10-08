@@ -9,8 +9,8 @@
 #include "random.h"
 
 #define INCLUDE_CONSERVATIVE
-// #define INCLUDE_DISSIPATIVE
-// #define INCLUDE_RANDOM
+#define INCLUDE_DISSIPATIVE
+#define INCLUDE_RANDOM
 
 // This function calculates all forces acting on the particles (bonded and non-bonded).
 // It initializes the forces array, then calculates bond-stretch, angle-bend, dihedral-torsion,
@@ -26,7 +26,7 @@ double calculate_forces(struct Parameters *p_parameters, struct Nbrlist *p_nbrli
 
     // Calculate the forces and accumulate the potential energy from each type of interaction
     double Epot = 0.0;
-    Epot = calculate_forces_bond(p_parameters, p_vectors);
+    // Epot = calculate_forces_bond(p_parameters, p_vectors);
     Epot += calculate_forces_nb(p_parameters, p_nbrlist, p_vectors);
     
     return Epot;
@@ -105,6 +105,9 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
     r_cutsq = p_parameters->r_cut * p_parameters->r_cut;
 
     double Epot = 0.0;
+
+    double dt = p_parameters->dt;
+    double dt_sq = pow(dt, -0.5);
     
 
     // Loop through the neighbor list and calculate the forces for each particle pair
@@ -116,25 +119,18 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
 
         double type_i = p_vectors->type[i];
         double type_j = p_vectors->type[j];
-
-        rij.x = r[i].x - r[j].x;
-        rij.x = rij.x - L.x * floor(rij.x / L.x + 0.5);
-        rij.y = r[i].y - r[j].y;
-        rij.y = rij.y - L.y * floor(rij.y / L.y + 0.5);
-        rij.z = r[i].z - r[j].z;
-        rij.z = rij.z - L.z * floor(rij.z / L.z + 0.5);
         
-        double rij_norm = (rij.x*rij.x + rij.y*rij.y + rij.z*rij.z);
+        double rij_norm = sqrt(rij.x*rij.x + rij.y*rij.y + rij.z*rij.z);
         struct Vec3D rij_hat = {0.0, 0.0, 0.0};
         rij_hat.x = (1.0/rij_norm) * rij.x;
         rij_hat.y = (1.0/rij_norm) * rij.y;
         rij_hat.z = (1.0/rij_norm) * rij.z;
         
         if (type_i == type_j){
-            a_ij = 75*kboltz*T/3; //3 is here the number density of water
+            a_ij = 75.0/3.0; //3 is here the number density of water
         }
         else {
-            a_ij = 75*kboltz*T/3 + delta_a;
+            a_ij = 75.0/3.0 + delta_a;
         }
 
         // Compute forces if the distance is smaller than the cutoff distance
@@ -143,9 +139,9 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
             #ifdef INCLUDE_CONSERVATIVE
             /// \todo Make the LJ parameters type-dependent (CH3 and CH2)
 
-            df_c.x = a_ij * (1 - rij_norm) * rij.x;
-            df_c.y = a_ij * (1 - rij_norm) * rij.y;
-            df_c.z = a_ij * (1 - rij_norm) * rij.z;
+            df_c.x = a_ij * (1 - rij_norm) * rij_hat.x;
+            df_c.y = a_ij * (1 - rij_norm) * rij_hat.y;
+            df_c.z = a_ij * (1 - rij_norm) * rij_hat.z;
 
             // Compute the force and apply it to both particles
             f[i].x += df_c.x;
@@ -169,9 +165,9 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
             vij.y = v[i].y - v[j].y;
             vij.z = v[i].z - v[j].z;
 
-            df_d.x = -gamma * w_D * rij_norm * (rij_hat.x * vij.x) * rij_hat.x;
-            df_d.y = -gamma * w_D * rij_norm * (rij_hat.y * vij.y) * rij_hat.y;
-            df_d.z = -gamma * w_D * rij_norm * (rij_hat.z * vij.z) * rij_hat.z;
+            df_d.x = -gamma * w_D * dot(rij_hat, vij) * rij_hat.x;
+            df_d.y = -gamma * w_D * dot(rij_hat, vij) * rij_hat.y;
+            df_d.z = -gamma * w_D * dot(rij_hat, vij) * rij_hat.z;
 
             // Compute the force and apply it to both particles
 
@@ -190,12 +186,12 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
             double theta_ij = gauss();
 
             // Clamp the theta values to a maximum and a minimum
-            if (theta_ij>sqrt(3)) theta_ij = sqrt(3);
-            if (theta_ij<-sqrt(3)) theta_ij = -sqrt(3);
+            // if (theta_ij>sqrt(3)) theta_ij = sqrt(3);
+            // if (theta_ij<-sqrt(3)) theta_ij = -sqrt(3);
             
-            df_r.x = sigma * w_R * rij_norm * theta_ij * rij_hat.x;
-            df_r.y = sigma * w_R * rij_norm * theta_ij * rij_hat.y;
-            df_r.z = sigma * w_R * rij_norm * theta_ij * rij_hat.z;
+            df_r.x = sigma * w_R * theta_ij * dt_sq * rij_hat.x;
+            df_r.y = sigma * w_R * theta_ij * dt_sq * rij_hat.y;
+            df_r.z = sigma * w_R * theta_ij * dt_sq * rij_hat.z;
 
             f[i].x += df_r.x;
             f[i].y += df_r.y;
