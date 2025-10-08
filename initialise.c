@@ -11,20 +11,8 @@
 // later to initialize different types (e.g., methane and ethane in a binary mixture).
 void initialise_types(struct Parameters *p_parameters, struct Vectors *p_vectors)
 {
-    //Declaring variables
-    int molecules = p_parameters->num_part/4;       
-
-    if (molecules >= 1)
-    {
-        //Looping over all molecules to declare the type (CH3 or CH2)
-        for (size_t i = 0; i < molecules; i++)
-        {
-            p_vectors->type[i*4] = 0; // CH3
-            p_vectors->type[i*4 + 1] = 0; //CH2
-            p_vectors->type[i*4 + 2] = 0; //CH2
-            p_vectors->type[i*4 + 3] = 0; //CH3
-        }
-    }
+    for (size_t i = 0; i < p_parameters->num_part; i++)
+        p_vectors->type[i] = 0; // Specify particle type (currently only one type)
 }
 
 // This function initializes the bond connectivity between particles.
@@ -244,13 +232,12 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
 // The total momentum is also removed to ensure zero total momentum (important for stability).
 void initialise_velocities(struct Parameters *p_parameters, struct Vectors *p_vectors)
 {
+    double sqrtktm = sqrt(p_parameters->kT / p_parameters->mass);
     struct Vec3D sumv = {0.0, 0.0, 0.0};  // Total velocity (to remove later)
 
     // Assign random velocities to each particle
     for (size_t i = 0; i < p_parameters->num_part; i++)
     {
-        size_t type_i = p_vectors->type[i];
-        double sqrtktm = sqrt(p_parameters->kT / p_parameters->mass[type_i]);
         p_vectors->v[i].x = sqrtktm * gauss();
         p_vectors->v[i].y = sqrtktm * gauss();
         p_vectors->v[i].z = sqrtktm * gauss();

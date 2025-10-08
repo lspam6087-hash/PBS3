@@ -46,25 +46,21 @@ void update_positions(struct Parameters *p_parameters, struct Nbrlist *p_nbrlist
 double update_velocities_half_dt(struct Parameters *p_parameters, struct Nbrlist *p_nbrlist, struct Vectors *p_vectors)
 {
     double Ekin = 0.0;  // Initialize kinetic energy
-    /// \todo Make sure type-specific particle masses are used
+    const double factor = 0.5 / p_parameters->mass * p_parameters->dt;  // Factor for velocity update
     struct Vec3D *v = p_vectors->v;  // Particle velocities
     struct Vec3D *f = p_vectors->f;  // Forces acting on particles
 
     // Loop over all particles and update their velocities
     for (size_t i = 0; i < p_parameters->num_part; i++)
     {
-        size_t type_i = p_vectors->type[i];
-        const double factor = 0.5 / p_parameters->mass[type_i] * p_parameters->dt;  // Factor for velocity update
         v[i].x += factor * f[i].x;  // Update velocity in x-direction
         v[i].y += factor * f[i].y;  // Update velocity in y-direction
         v[i].z += factor * f[i].z;  // Update velocity in z-direction
-        Ekin += (v[i].x * v[i].x + v[i].y * v[i].y + v[i].z * v[i].z)* p_parameters->mass[type_i];  // Accumulate kinetic energy
-        
+        Ekin += v[i].x * v[i].x + v[i].y * v[i].y + v[i].z * v[i].z;  // Accumulate kinetic energy
     }
-    Ekin = 0.5 * Ekin;
+
     // Final kinetic energy calculation
-    /// \todo Make sure type-specific particle masses are used
-    
+    Ekin = 0.5 * Ekin * p_parameters->mass;
     return Ekin;  // Return the system's kinetic energy
 }
 
@@ -72,7 +68,6 @@ double update_velocities_half_dt(struct Parameters *p_parameters, struct Nbrlist
 // If a particle moves beyond the box, it is wrapped around to the opposite side.
 void boundary_conditions(struct Parameters *p_parameters, struct Vectors *p_vectors)
 {
-    // TODO: include neighbor list and get box size from there
     struct Vec3D invL;  // Inverse of the box size
     struct Vec3D *r = p_vectors->r;  // Particle positions
     struct Vec3D L = p_parameters->L;  // Box dimensions
@@ -93,6 +88,6 @@ void boundary_conditions(struct Parameters *p_parameters, struct Vectors *p_vect
 
 // This function applies a thermostat to maintain the system's temperature.
 void thermostat(struct Parameters *p_parameters, struct Vectors *p_vectors, double Ekin)
-/// \todo Change velocities by thermostatting
+// TODO: Change velocities by thermostatting
 {
 }

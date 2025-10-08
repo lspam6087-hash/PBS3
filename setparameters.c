@@ -5,32 +5,31 @@
 #include "constants.h"
 #include "structs.h"
 
-double box_size(struct Parameters *p_parameters)
-{
-  size_t n_part = p_parameters->num_part;
-  double rho = p_parameters->rho;
-  double N_A = 6.022e23;
-  double total_mass = (2*p_parameters->mass[0] + 2*p_parameters->mass[1])*1.0e-3;
-  double r_cut = p_parameters->r_cut;
-  double L, L3;
+// double box_size(struct Parameters *p_parameters)
+// {
+//   size_t n_part = p_parameters->num_part;
+//   double rho = p_parameters->rho;
+//   double N_A = 6.022e23;
+//   double total_mass = (2*p_parameters->mass[0] + 2*p_parameters->mass[1])*1.0e-3;
+//   double r_cut = p_parameters->r_cut;
+//   double L, L3;
 
-  //Calculation of box size
-  L3 = total_mass * n_part/(rho * N_A);
-  L = pow(L3, 1.0/3.0)/(1.0e-10); //Conversion to [A]
+//   //Calculation of box size
+//   L3 = total_mass * n_part/(rho * N_A);
+//   L = pow(L3, 1.0/3.0)/(1.0e-10); //Conversion to [A]
 
-  if (L < 2*r_cut)
-    L = 2*r_cut;
+//   if (L < 2*r_cut)
+//     L = 2*r_cut;
 
-  return L;
-}
+//   return L;
+// }
 
 // Set the parameters of this simulation
 void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
 {
 // The parameters first 5 parameters are only used for demonstration puprposes
   p_parameters->kT = 1.0;                                   //thermal energy
-  p_parameters->mass[0] = 1.0;                  //mass of a CH3 particle
-  p_parameters->mass[1] = 1.0;                  //mass of a CH2 particle
+  p_parameters->mass = 1.0;                                 //mass of a particle
   p_parameters->epsilon = 1.0;                              //LJ interaction strength
   p_parameters->sigma = 1.0;                                //LJ particle diameter
   p_parameters->a_ij = 0.0;                                 //Repulsion parameter
@@ -46,7 +45,7 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
   p_parameters->exclude_13_nb = 0;                          // 1-3 connected atoms exluded from non-bonded interactions    
   p_parameters->dt = 0.01;                                  //integration time step
   p_parameters->r_cut = 1.0;                                //cut-off distance used for neigbor list
-  double Lbox = box_size(p_parameters);
+  // double Lbox = box_size(p_parameters);
   p_parameters->L = (struct Vec3D){5.0, 5.0, 5.0};         //Box size
   p_parameters->r_shell = 0.4;                              //shell thickness for neighbor list
   p_parameters->num_dt_pdb = 500;                           //number of time steps in between pdb outputs

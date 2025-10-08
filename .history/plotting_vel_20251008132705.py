@@ -39,7 +39,7 @@ f_v = f_v/max(f_v)
 
 plt.figure(figsize=(10,6))
 # plt.bar(df_clean["v_center"], df_clean["count"], width=0.4, align='center')
-plt.plot(df_clean["v_center"], df_clean["density"], 'o')
+plt.plot(df_clean["v_center"], df_clean["count"], 'o')
 plt.plot(v, f_v,'-')
 
 plt.xlim([0, 10])
