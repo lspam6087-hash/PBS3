@@ -20,8 +20,8 @@ void initialise_types(struct Parameters *p_parameters, struct Vectors *p_vectors
         for (size_t i = 0; i < molecules; i++)
         {
             p_vectors->type[i*4] = 0; // CH3
-            p_vectors->type[i*4 + 1] = 1; //CH2
-            p_vectors->type[i*4 + 2] = 1; //CH2
+            p_vectors->type[i*4 + 1] = 0; //CH2
+            p_vectors->type[i*4 + 2] = 0; //CH2
             p_vectors->type[i*4 + 3] = 0; //CH3
         }
     }
