@@ -44,7 +44,7 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
   p_parameters->sample_interval = 10;                       // Sample interval
   p_parameters->exclude_12_nb = 0;                          // 1-2 connected atoms exluded from non-bonded interactions 
   p_parameters->exclude_13_nb = 0;                          // 1-3 connected atoms exluded from non-bonded interactions    
-  p_parameters->dt = 0.04;                                  //integration time step
+  p_parameters->dt = 0.01;                                  //integration time step
   p_parameters->r_cut = 1.0;                                //cut-off distance used for neigbor list
   double Lbox = box_size(p_parameters);
   p_parameters->L = (struct Vec3D){5.0, 5.0, 5.0};         //Box size
