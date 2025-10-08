@@ -9,8 +9,8 @@
 #include "random.h"
 
 #define INCLUDE_CONSERVATIVE
-#define INCLUDE_DISSIPATIVE
-#define INCLUDE_RANDOM
+// #define INCLUDE_DISSIPATIVE
+// #define INCLUDE_RANDOM
 
 // This function calculates all forces acting on the particles (bonded and non-bonded).
 // It initializes the forces array, then calculates bond-stretch, angle-bend, dihedral-torsion,
@@ -188,6 +188,10 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
             double sigma = 3; // From the assignment
             double w_R = pow(w_D, 0.5); //Weight function
             double theta_ij = gauss();
+
+            // Clamp the theta values to a maximum and a minimum
+            if (theta_ij>sqrt(3)) theta_ij = sqrt(3);
+            if (theta_ij<-sqrt(3)) theta_ij = -sqrt(3);
             
             df_r.x = sigma * w_R * rij_norm * theta_ij * rij_hat.x;
             df_r.y = sigma * w_R * rij_norm * theta_ij * rij_hat.y;

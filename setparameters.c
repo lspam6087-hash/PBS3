@@ -51,6 +51,7 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
   p_parameters->r_shell = 0.4;                              //shell thickness for neighbor list
   p_parameters->num_dt_pdb = 500;                           //number of time steps in between pdb outputs
   strcpy(p_parameters->filename_pdb, "trajectories");       //filename (without extension) for pdb file
+  strcpy(p_parameters->filename_hist, "data/vel_histogramB3.csv");//filename histogram
   p_parameters->rescale_output = 1;                         //factor used to rescale output lengthscale (Most visualisation programs identify bonds based on distances of order 1)
   p_parameters->load_restart = 0;                           //if equal 1 restart file is loaded
   strcpy(p_parameters->restart_in_filename, "restart.dat"); //filename for loaded restart file

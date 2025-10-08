@@ -101,8 +101,7 @@ int main(void)
     initialise_grf(&parameters, &vectors);
 
     #ifdef HISTOGRAM
-            // Include the data for the histogram
-            write_hist(&parameters, &vectors, step, &p_vhist);
+        initialize_hist(&parameters, &vectors, step, &p_vhist);
     #endif
 
     // Main MD loop using velocity-Verlet integration
@@ -136,6 +135,9 @@ int main(void)
         // Update the GRF
         grcount = update_grf(&parameters, &vectors);
 
+        // Update the Histogram
+        update_hist(&parameters, &vectors, step, &p_vhist);
+
         // Output system state every 'num_dt_pdb' steps
         if (step % parameters.num_dt_pdb == 0) 
             record_trajectories_pdb(0, &parameters, &vectors, time); 
@@ -146,9 +148,10 @@ int main(void)
 
         /// \todo Implement on-the-fly analysis of velocity distribution, torsion angle distribution and mean-square displacement
         #ifdef HISTOGRAM
-            // Include the data for the histogram
-            write_hist(&parameters, &vectors, step, &p_vhist);
+            // Update the Histogram
+            update_hist(&parameters, &vectors, step, &p_vhist);
         #endif
+
         // Print to the screen to monitor the progress of the simulation
         /// \todo Write the output (also) to file, and extend the output with temperature
         printf("Step %lu, Time %f, Epot %f, Ekin %f, Etot %f\n", (long unsigned)step, time, Epot, Ekin, Epot + Ekin);
@@ -160,6 +163,7 @@ int main(void)
     // 
     finalise_grf(&parameters, &vectors, grcount);
 
+    record_histogram_csv(&parameters, &p_vhist, step);
 
     // Save final state
     save_restart(&parameters, &vectors); 

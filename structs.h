@@ -41,10 +41,12 @@ struct Parameters
     double rescale_output;   //!< Rescale factor for outputting positions, typically used to rescale lenghts to a magnitude required by specific visualization software.
     char filename_pdb[1024]; //!< filename (without extension) for pdb file
     char filename_xyz[1024]; //!< filename (without extension) for pdb file
+    char filename_hist[1024]; //!< filename histogram
     char load_restart;       //!< if equal 1 restart file is loaded
     size_t num_dt_restart;   //!< Number of time steps between saves of restart file
     char restart_in_filename[1024];  //!< filename for loaded restart file
     char restart_out_filename[1024]; //!< filename for saved restart file
+
 
     size_t nbins;
     double hist_vmax;
@@ -166,8 +168,10 @@ struct VelHist
     size_t nbins;               //!< Number of bins
     double vmin, vmax;          //!< Range in speed units
     double bin_width;           //!< Width of the bins
-    double *counts;      //!< Counts per bin
-    double total_counts; //!< Total samples added
+    size_t *counts;             //!< Counts per bin
+    double *bin_centers;        //!< Center bins
+    double total_counts;        //!< Total samples added
+    double dv;                  //!< Change in velocity
 };
 
 #endif /* TYPES_MD_H_ */
