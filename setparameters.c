@@ -61,6 +61,9 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
   p_parameters->grcount = 0;                                //Counter of calls to update_gr 
   p_parameters->dbin = p_parameters->r_cut/p_parameters->nbin; //Bin width
 
+  p_parameters->amount_mon = 1;
+  p_parameters->binary_mix = 0;                             // 1 for binary mixture, 0 for a single component system
+
   p_vhist->nbins = 100;                                      //Number of bins
   p_vhist->vmin = 0.0;                                      //Min velocity
   p_vhist->vmax = 30.0;                                     //Max velocity

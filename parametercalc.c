@@ -7,14 +7,12 @@
 
 // This function calculates the volume fraction of type A particles
 // Assumes that the volume of all of the beads (monomers) is the same
-volfrac_calc(struct Parameters *p_parameters, struct Vectors *p_vectors){
-    double phi_A = 0.0;
-    double *type = p_vectors->type;
+double volfrac_calc(struct Parameters *p_parameters, struct Vectors *p_vectors){
+    double phi_A, N_A = 0.0;
     double num_part = p_parameters->num_part;
-    double N_A = 0;
 
     for (size_t i = 0; i < num_part; i++){
-        if (type[i] == 0){ // Assumes type A is represented by 0
+        if (p_vectors->type[i] == 0){ // Assumes type A is represented by 0
             N_A++;
         }
     }

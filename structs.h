@@ -51,6 +51,9 @@ struct Parameters
     size_t nbins;
     double hist_vmax;
     size_t sample_interval;
+
+    size_t amount_mon;       //!< Amount of monomers in a polymer
+    size_t binary_mix;       //!< 1 for binaty mixture, 0 for a single component system
 };
 
 /**

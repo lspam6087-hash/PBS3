@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <math.h>
+#include "structs.h"
 /**
  * @brief Calculates the volume 
  * 

@@ -39,6 +39,13 @@ void initialise_structure(struct Parameters *p_parameters, struct Vectors *p_vec
 void initialise(struct Parameters *p_parameters, struct Vectors *p_vectors, struct Nbrlist *p_nbrlist, size_t *p_step, double *p_time);
 
 /**
+ * @brief 
+ * 
+ * @param 
+ */
+void build_polymer(struct Parameters *p_parameters, struct Vec3D molecule_center, struct Vectors *p_vectors, int ipart);
+
+/**
  * @brief Initialises positions on a cubic lattice
  * 
  * @param p_parameters used members: L
