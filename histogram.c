@@ -30,7 +30,7 @@ void update_hist(struct Parameters *p_parameters, struct Vectors *p_vectors, siz
     for (size_t i; i < n; i++){
         double vel = norm(p_vectors->v[i]);
 
-        //Calculate the bin index and see if it is within bounds
+        //Calculate the bin index and check if it is within bounds
         int bin = (int)floor(vel / dv);
         if (bin >= 0 && bin < nbins) 
             p_vhist->counts[bin]++;

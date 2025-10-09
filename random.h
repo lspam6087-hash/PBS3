@@ -8,6 +8,8 @@
  */
 double generate_uniform_random(void);
 
+double dist_rand_uniform(void); //\todo include description
+
 /**
  * @brief Generate Gaussian distributed random number with mean 0 and standard deviations 1
  * 

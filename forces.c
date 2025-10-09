@@ -184,10 +184,7 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
             double sigma = 3; // From the assignment
             double w_R = pow(w_D, 0.5); //Weight function
             double theta_ij = gauss();
-
-            // Clamp the theta values to a maximum and a minimum
-            // if (theta_ij>sqrt(3)) theta_ij = sqrt(3);
-            // if (theta_ij<-sqrt(3)) theta_ij = -sqrt(3);
+            // double theta_ji = dist_rand_uniform();
             
             df_r.x = sigma * w_R * theta_ij * dt_sq * rij_hat.x;
             df_r.y = sigma * w_R * theta_ij * dt_sq * rij_hat.y;
