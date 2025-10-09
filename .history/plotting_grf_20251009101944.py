@@ -28,6 +28,6 @@ plt.bar(x, y, width=np.diff(bin_edges), align='center', edgecolor='black')
 
 plt.xlabel("Distance from center [Angstrom]")
 plt.ylabel("Probability [-]")
-plt.title("Probability distribution")
-# plt.savefig("Figures/B2.png")
+# plt.title("Probability distribution")
+plt.savefig("Figures/B2.png")
 plt.show()
