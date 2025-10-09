@@ -226,70 +226,29 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
     struct Index3D n; // Number of grid cells along each axis
     double dl;        // Lattice spacing
     int ipart = 0;    // Particle index
-    int imol = 0;     //molecule index
 
-    double r0 = 1.54; // bond length in Angstrom
-
-    size_t N = p_parameters->amount_mon;
-
-    int num_mol = p_parameters->num_part / N;
-    double bondlength = r0 + 0.0;
-
-    //If there is only 1 molecule: center in box
-    if (num_mol == 1) 
-    {
-        // centre of the box
-        struct Vec3D molecule_center;
-        molecule_center.x = 0.5 * p_parameters->L.x;
-        molecule_center.y = 0.5 * p_parameters->L.y;
-        molecule_center.z = 0.5 * p_parameters->L.z;
-
-        // place 4 atoms in a straight x-direction chain centred at box centre
-        build_polymer(p_parameters, molecule_center, p_vectors, 0);
-        return;
-    }
-    
-    n.i = (int) floor(p_parameters->L.x / 7.0);
-    if (n.i < 1) 
-        n.i = 1;
-
-    int mol_per_layer = (int) ceil((double) num_mol / n.i);
-    n.j = (int) floor(sqrt(mol_per_layer));
-    if (n.j < 1) 
-        n.j = 1;
-    n.k = (int) ceil((double) mol_per_layer / n.j);
-
+    // Calculate lattice spacing based on particle number and box dimensions
+    dl = pow(p_parameters->L.x * p_parameters->L.y * p_parameters->L.z / ((double)p_parameters->num_part), 1.0 / 3.0);
+    n.i = (int)ceil(p_parameters->L.x / dl);
+    n.j = (int)ceil(p_parameters->L.y / dl);
+    n.k = (int)ceil(p_parameters->L.z / dl);
     dr.x = p_parameters->L.x / (double)n.i;
     dr.y = p_parameters->L.y / (double)n.j;
     dr.z = p_parameters->L.z / (double)n.k;
     ipart = 0;
-    imol = 0;
     for (size_t i = 0; i < n.i; ++i)
-    {
         for (size_t j = 0; j < n.j; ++j)
-        {
-            for (size_t k = 0; k < n.k; ++k)
+            for (size_t k = 0; k < n.k; ++k, ++ipart)
             {
-                if (imol >= num_mol)
+                if (ipart >= p_parameters->num_part)
                     break;
-                
-                //Molecule center
-                struct Vec3D molecule_center;
-                molecule_center.x = (i + 0.5) * dr.x;
-                molecule_center.y = (j + 0.5) * dr.y;
-                molecule_center.z = (k + 0.5) * dr.z;
-                
-                build_polymer(p_parameters, molecule_center, p_vectors, ipart);
-
-                ipart += N;
-                imol++;
+                p_vectors->r[ipart].x = (i + 0.5) * dr.x;
+                p_vectors->r[ipart].y = (j + 0.5) * dr.y;
+                p_vectors->r[ipart].z = (k + 0.5) * dr.z;
+                //      p_vectors->r[ipart].x = p_parameters->L.x*generate_uniform_random();
+                //      p_vectors->r[ipart].y = p_parameters->L.y*generate_uniform_random();
+                //      p_vectors->r[ipart].z = p_parameters->L.z*generate_uniform_random();
             }
-        if (imol >= num_mol)
-            break;
-        }
-    if (imol >= num_mol)
-        break;
-    }
 }
 
 // This function initializes the velocities of particles based on the Maxwell-Boltzmann distribution.
