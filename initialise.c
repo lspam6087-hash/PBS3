@@ -16,8 +16,11 @@ void initialise_types(struct Parameters *p_parameters, struct Vectors *p_vectors
 
         if(binary == 1){
         // Include code to initialize a binary mixture here
-            for (size_t i = 0; i < p_parameters->num_part; i++){
-                p_vectors->type[i] = (i / N) % 2; // Fills in the array with alternating 0 and 1 every N particles
+            for (size_t i = 0; i < p_parameters->num_part/2; i++){
+                p_vectors->type[i] = 0; // Fills in the array with alternating 0 and 1 every N particles
+            }
+            for (size_t i = p_parameters->num_part/2; i < p_parameters->num_part; i++){
+                 p_vectors->type[i] = 1;
             }
         } else {
             for (size_t i = 0; i < p_parameters->num_part; i++){
