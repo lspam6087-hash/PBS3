@@ -50,7 +50,8 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
   p_parameters->r_shell = 0.4;                              //shell thickness for neighbor list
   p_parameters->num_dt_pdb = 500;                           //number of time steps in between pdb outputs
   strcpy(p_parameters->filename_pdb, "trajectories");       //filename (without extension) for pdb file
-  strcpy(p_parameters->filename_hist, "data/vel_histogramB3.csv");//filename histogram
+  strcpy(p_parameters->filename_hist, "data/vel_histogramB3.csv");//filename histogram velocity
+  strcpy(p_parameters->filename_hist_dens, "data/dens_histogramC2.csv");//filename histogram density
   p_parameters->rescale_output = 1;                         //factor used to rescale output lengthscale (Most visualisation programs identify bonds based on distances of order 1)
   p_parameters->load_restart = 0;                           //if equal 1 restart file is loaded
   strcpy(p_parameters->restart_in_filename, "restart.dat"); //filename for loaded restart file
@@ -61,8 +62,9 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
   p_parameters->grcount = 0;                                //Counter of calls to update_gr 
   p_parameters->dbin = p_parameters->r_cut/p_parameters->nbin; //Bin width
 
-  p_parameters->amount_mon = 1;
-  p_parameters->binary_mix = 0;                             // 1 for binary mixture, 0 for a single component system
+  p_parameters->nbins_dens = 25;                            // Number of bins for density histogram
+  p_parameters->amount_mon = 1;                             // Amount of monomers in a polymer
+  p_parameters->binary_mix = 1;                             // 1 for binary mixture, 0 for a single component system
 
   p_vhist->nbins = 100;                                      //Number of bins
   p_vhist->vmin = 0.0;                                      //Min velocity

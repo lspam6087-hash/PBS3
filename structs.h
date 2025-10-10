@@ -42,6 +42,7 @@ struct Parameters
     char filename_pdb[1024]; //!< filename (without extension) for pdb file
     char filename_xyz[1024]; //!< filename (without extension) for pdb file
     char filename_hist[1024]; //!< filename histogram
+    char filename_hist_dens[1024]; //!< filename histogram desnity
     char load_restart;       //!< if equal 1 restart file is loaded
     size_t num_dt_restart;   //!< Number of time steps between saves of restart file
     char restart_in_filename[1024];  //!< filename for loaded restart file
@@ -52,6 +53,7 @@ struct Parameters
     double hist_vmax;
     size_t sample_interval;
 
+    size_t nbins_dens;       //!< Number of bins for density histogram
     size_t amount_mon;       //!< Amount of monomers in a polymer
     size_t binary_mix;       //!< 1 for binaty mixture, 0 for a single component system
 };
@@ -132,6 +134,10 @@ struct Vectors
     struct Angle *angles;       //!< angles
     struct Dihedral *dihedrals; //!< dihedrals
     double *grbin;              //!< Radial distribution initialisation
+
+    double *density_A;           //!< Density of type A particles
+    double *density_B;           //!< Density of type B particles
+    double *density_total;       //!< Density of particles
 };
 
 /**

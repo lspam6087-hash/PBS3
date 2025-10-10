@@ -38,6 +38,7 @@
 #include "vector_functions.h"
 #include "grf.h" 
 #include "histogram.h"
+#include "density.h"
 
 #define INCLUDE_FORCES // If B2 needs to be checked. This needs to be commented
 #define HISTOGRAM
@@ -165,6 +166,11 @@ int main(void)
     finalise_grf(&parameters, &vectors, grcount);
 
     record_histogram_csv(&parameters, &p_vhist, step);
+
+    // Density profile
+    initialize_density_histograms(&parameters, &vectors);
+    accumulate_density_histogram(&parameters, &vectors);
+    write_density_histograms(&parameters, &vectors);
 
     // Save final state
     save_restart(&parameters, &vectors); 

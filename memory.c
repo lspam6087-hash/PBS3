@@ -22,6 +22,10 @@ void alloc_vectors(struct Vectors *p_vectors, struct Parameters *p_parameters, s
     p_vectors->num_dihedrals = 0;
     p_vhist->counts = (size_t *)malloc(p_vhist->nbins * sizeof(size_t));
     p_vhist->bin_centers = (double *)malloc(p_vhist->nbins * (sizeof(double)));
+
+    p_vectors->density_A = (double *)malloc(nbin * sizeof(double));
+    p_vectors->density_B = (double *)malloc(nbin * sizeof(double));
+    p_vectors->density_total = (double *)malloc(nbin * sizeof(double));
 }
 
 // Free the arrays in 'vectors'
@@ -53,6 +57,13 @@ void free_vectors(struct Vectors *p_vectors, struct VelHist *p_vhist)
     p_vectors->num_bonds = 0;
     p_vectors->num_angles = 0;
     p_vectors->num_dihedrals = 0;
+
+    free(p_vectors->density_A);
+    p_vectors->density_A = NULL;
+    free(p_vectors->density_B);
+    p_vectors->density_B = NULL;
+    free(p_vectors->density_total);
+    p_vectors->density_total = NULL;
 }
 
 // Allocate all variables needed in the MD simulation
