@@ -39,9 +39,11 @@
 #include "grf.h" 
 #include "histogram.h"
 #include "density.h"
+#include "parametercalc.h"
 
 #define INCLUDE_FORCES // If B2 needs to be checked. This needs to be commented
 #define HISTOGRAM
+#define NUMPART_CALC
 
 /** 
  * @brief Main MD simulation code. After initialization, 
@@ -70,6 +72,12 @@ int main(void)
 
     // Step 1: Set the simulation parameters from input files
     set_parameters(&parameters, &p_vhist); 
+
+    #ifdef NUMPART_CALC
+        parameters.num_dt_steps = 25000;
+        parameters.L = (struct Vec3D){8.0, 8.0, 20.0}; // Set box dimensions for number of particles calculation
+        num_part_calc(&parameters);
+    #endif
 
     // Step 2: Allocate memory for particles, forces, and neighbor lists
     alloc_memory(&parameters, &vectors, &nbrlist, &p_vhist); 
@@ -156,7 +164,7 @@ int main(void)
 
         // Print to the screen to monitor the progress of the simulation
         /// \todo Write the output (also) to file, and extend the output with temperature
-        printf("Step %lu, Time %f, Epot %f, Ekin %f, Etot %f\n", (long unsigned)step, time, Epot, Ekin, Epot + Ekin);
+        printf("Step %lu, Time %.4f, Epot %f, Ekin %f, Etot %f\n", (long unsigned)step, time, Epot, Ekin, Epot + Ekin);
 
         // Save the relevant parameters for later data analysis
         record_diagnostics_csv((step == 1) ? 1 : 0, &parameters, time ,Ekin, Epot); 
@@ -171,6 +179,10 @@ int main(void)
     initialize_density_histograms(&parameters, &vectors);
     accumulate_density_histogram(&parameters, &vectors);
     write_density_histograms(&parameters, &vectors);
+
+    // Chi parameter calculation and recording
+    chi_calculation(&parameters, &vectors);
+    record_chi_csv(&parameters);
 
     // Save final state
     save_restart(&parameters, &vectors); 

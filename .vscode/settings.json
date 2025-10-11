@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "vector_functions.h": "c"
+        "vector_functions.h": "c",
+        "parametercalc.h": "c"
     }
 }

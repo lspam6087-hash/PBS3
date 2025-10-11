@@ -48,6 +48,11 @@ struct Parameters
     char restart_in_filename[1024];  //!< filename for loaded restart file
     char restart_out_filename[1024]; //!< filename for saved restart file
 
+    double chi;               //<! Flory-Huggings parameter
+    double phi_A;             //!< Volume fraction of type A particles
+    double N_A;               //!< Number of type A particles
+    size_t reset_chi_file;    //!< if 1 reset chi data file
+    char filename_chi_data[1024]; //!< filename for chi data output
 
     size_t nbins;
     double hist_vmax;

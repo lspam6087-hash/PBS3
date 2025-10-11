@@ -13,11 +13,12 @@ data.columns = data.columns.str.strip()
 
 
 plt.figure(figsize=(8, 5))
-plt.plot(data["x_center"], data["density_A"], marker='o', label='Density A')
-plt.plot(data["x_center"], data["density_B"], marker='s', label='Density B')
-plt.plot(data["x_center"], data["density_total"], marker='^', label='Density Total')
+plt.plot(data["x_center"], data["density_A"], label='Density A')
+plt.plot(data["x_center"], data["density_B"], label='Density B')
+plt.plot(data["x_center"], data["density_total"], label='Density Total')
 
 plt.xlabel("X Center")
+# plt.ylim([0,3])
 plt.ylabel("Density")
 plt.title("Density Distribution (A, B, Total)")
 plt.legend()

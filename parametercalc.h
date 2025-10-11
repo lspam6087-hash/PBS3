@@ -5,18 +5,22 @@
 #include <stdio.h>
 #include <math.h>
 #include "structs.h"
+
+void num_part_calc(struct Parameters *p_parameters);
+
 /**
- * @brief Calculates the volume 
+ * @brief Calculates the volume fraction
  * 
  * @return volume fraction of type A particles and number of type A particles
  */
-double volfrac_calc(struct Parameters *p_parameters, struct Vectors *p_vectors);
+void volfrac_calc(struct Parameters *p_parameters, struct Vectors *p_vectors);
 
 /**
  * @brief Calculates the Chi parameter wih the volume fraction of type A particles 
  * 
  * @return Chi parameter
  */
-double chi_calculation(struct Parameters *p_parameters, struct Vectors *p_vectors);
+void chi_calculation(struct Parameters *p_parameters, struct Vectors *p_vectors);
 
+void record_chi_csv(struct Parameters *p_parameters);
 #endif 

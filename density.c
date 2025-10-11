@@ -52,6 +52,13 @@ void accumulate_density_histogram(struct Parameters *p_parameters, struct Vector
         density_B[i] /= bin_volume;
         density_total[i] /= bin_volume;
     }
+
+    double total_N = 0.0;
+    for (int i = 0; i < nbins; i++) {
+        total_N += density_total[i] * bin_volume;
+    }
+    // printing the total_N and num_part to check if they are equal
+    printf("Total N from density histogram: %.f\nNumber of particles: %lu\n", total_N, (long unsigned)num_particles);
 }
 
 void write_density_histograms(struct Parameters *p_parameters, struct Vectors *p_vectors) {
