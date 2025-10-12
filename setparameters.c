@@ -74,6 +74,8 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
   p_parameters->reset_chi_file = 1;
   strcpy(p_parameters->filename_chi_data, "data/chi_dataC4.csv");//filename histogram density
 
+  p_parameters->N = 1;
+
 
   // Parameters for the velocity histogram
   p_vhist->nbins = 100;                                      //Number of bins
