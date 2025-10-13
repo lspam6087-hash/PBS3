@@ -62,7 +62,6 @@ struct Parameters
     size_t amount_mon;       //!< Amount of monomers in a polymer
     size_t binary_mix;       //!< 1 for binaty mixture, 0 for a single component system
 
-    size_t N;                //!< Polymer length
 };
 
 /**

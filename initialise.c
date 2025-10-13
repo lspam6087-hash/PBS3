@@ -13,15 +13,14 @@ void initialise_types(struct Parameters *p_parameters, struct Vectors *p_vectors
 {
     size_t N = p_parameters->amount_mon;
     size_t binary = p_parameters->binary_mix;
-    size_t particle_A = p_parameters->num_part/2; //50% of the particles are of type A (set arbitrarily)
 
         if(binary == 1){
         // Include code to initialize a binary mixture here
-            for (size_t i = 0; i < particle_A; i++){
-                p_vectors->type[i] = 0; // Fills in the array with 0 for particle A
+            for (size_t i = 0; i < p_parameters->num_part/2; i++){
+                p_vectors->type[i] = 0; // Fills in the array with alternating 0 and 1 every N particles
             }
-            for (size_t i = particle_A; i < p_parameters->num_part; i++){
-                 p_vectors->type[i] = 1; // Fills in the array with 1 for particle B
+            for (size_t i = p_parameters->num_part/2; i < p_parameters->num_part; i++){
+                 p_vectors->type[i] = 1;
             }
         } else {
             for (size_t i = 0; i < p_parameters->num_part; i++){
@@ -35,19 +34,16 @@ void initialise_types(struct Parameters *p_parameters, struct Vectors *p_vectors
 // This will be important for handling bonded interactions in the simulation.
 void initialise_bond_connectivity(struct Parameters *p_parameters, struct Vectors *p_vectors)
 {
-    size_t particle_A = p_parameters->num_part/2;
-    size_t N = p_parameters->N;
-
-    size_t num_bonds_A = particle_A*(N-1)/N;  // The number of particles divided by 
-    int molecules = p_parameters->num_part;
-    struct Bond *bonds = (struct Bond *)malloc(num_bonds_A * sizeof(struct Bond));
-    struct Bond *bonds_B = (struct Bond *)malloc(num_bonds_A * sizeof(struct Bond));
+    size_t N = p_parameters->amount_mon;
+    int total_particles = p_parameters->num_part;
+    size_t num_bonds = total_particles * (N-1)/N;  // Currently, no bonds are set up.
+    struct Bond *bonds = (struct Bond *)malloc(num_bonds * sizeof(struct Bond));
 
     /// \todo Specify bonds between particles, i.e., bonds[i].i and bonds[i].j for bonded particle pairs.
     size_t x = 0;
-    for (int n = 0; n < molecules; n++)
+    for (int n = 0; n < total_particles; n++)
     {
-        if ((n % 4) != 3)
+        if ((n % N) != (N-1))
         {
             bonds[x].i = n;
             bonds[x].j = n + 1;
