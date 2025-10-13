@@ -22,6 +22,7 @@ void alloc_vectors(struct Vectors *p_vectors, struct Parameters *p_parameters, s
     p_vectors->num_dihedrals = 0;
     p_vhist->counts = (size_t *)malloc(p_vhist->nbins * sizeof(size_t));
     p_vhist->bin_centers = (double *)malloc(p_vhist->nbins * (sizeof(double)));
+    p_vhist->typeA_counts = (size_t *)malloc(p_vhist->nbins * (sizeof(size_t)));
 
     p_vectors->density_A = (double *)malloc(nbin * sizeof(double));
     p_vectors->density_B = (double *)malloc(nbin * sizeof(double));
@@ -51,6 +52,8 @@ void free_vectors(struct Vectors *p_vectors, struct VelHist *p_vhist)
     p_vectors->grbin = NULL;
     free(p_vhist->counts);
     p_vhist->counts = NULL;
+    free(p_vhist->bin_centers);
+    p_vhist->bin_centers = NULL;
     free(p_vhist->bin_centers);
     p_vhist->bin_centers = NULL;
     p_vectors->size = 0;

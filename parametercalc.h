@@ -9,18 +9,26 @@
 void num_part_calc(struct Parameters *p_parameters);
 
 /**
- * @brief Calculates the volume fraction
+ * @brief Calculates the volume fraction of the left size of the x-direction
  * 
  * @return volume fraction of type A particles and number of type A particles
  */
-void volfrac_calc(struct Parameters *p_parameters, struct Vectors *p_vectors);
+double average_phi_A_first_half(struct VelHist *p_vhist);
 
 /**
  * @brief Calculates the Chi parameter wih the volume fraction of type A particles 
  * 
  * @return Chi parameter
  */
-void chi_calculation(struct Parameters *p_parameters, struct Vectors *p_vectors);
+double chi_calculation(struct Parameters *p_parameters, struct VelHist *p_vhist);
 
 void record_chi_csv(struct Parameters *p_parameters);
+
+void initialize_phi_hist(struct Parameters *p_parameters, struct Vectors *p_vectors, struct VelHist *p_vhist);
+
+void update_phi_hist(struct Parameters *p_parameters, struct Vectors *p_vectors, struct VelHist *p_vhist);
+
+void record_phi_histogram_csv(struct Parameters *p_parameters,struct VelHist *p_vhist);
+
+void print_chi_csv(struct Parameters *p_parameters, struct VelHist *p_vhist);
 #endif 

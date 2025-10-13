@@ -74,7 +74,7 @@ int main(void)
     set_parameters(&parameters, &p_vhist); 
 
     #ifdef NUMPART_CALC
-        parameters.num_dt_steps = 25000;
+        parameters.num_dt_steps = 2500;
         parameters.L = (struct Vec3D){8.0, 8.0, 20.0}; // Set box dimensions for number of particles calculation
         num_part_calc(&parameters);
     #endif
@@ -181,8 +181,10 @@ int main(void)
     write_density_histograms(&parameters, &vectors);
 
     // Chi parameter calculation and recording
-    chi_calculation(&parameters, &vectors);
-    record_chi_csv(&parameters);
+    initialize_phi_hist(&parameters, &vectors, &p_vhist);
+    update_phi_hist(&parameters, &vectors, &p_vhist);
+    record_phi_histogram_csv(&parameters, &p_vhist);
+    print_chi_csv(&parameters, &p_vhist);
 
     // Save final state
     save_restart(&parameters, &vectors); 

@@ -186,6 +186,7 @@ struct VelHist
     double *bin_centers;        //!< Center bins
     double total_counts;        //!< Total samples added
     double dv;                  //!< Change in velocity
+    size_t *typeA_counts;
 };
 
 #endif /* TYPES_MD_H_ */
