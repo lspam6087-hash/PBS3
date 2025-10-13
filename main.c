@@ -75,6 +75,7 @@ int main(void)
 
     #ifdef NUMPART_CALC
         parameters.num_dt_steps = 2500;
+        parameters.reset_chi_file = 1;
         parameters.L = (struct Vec3D){8.0, 8.0, 20.0}; // Set box dimensions for number of particles calculation
         num_part_calc(&parameters);
     #endif

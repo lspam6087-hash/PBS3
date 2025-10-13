@@ -71,7 +71,7 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
   p_parameters->chi = 0.0;
   p_parameters->phi_A = 0.0;
   p_parameters->N_A = 0.0;
-  p_parameters->reset_chi_file = 1;
+  p_parameters->reset_chi_file = 0;
   strcpy(p_parameters->filename_chi_data, "data/chi_dataC4.csv");//filename histogram density
 
 
