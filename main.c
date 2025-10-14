@@ -74,7 +74,7 @@ int main(void)
     set_parameters(&parameters, &p_vhist); 
 
     #ifdef NUMPART_CALC
-        parameters.num_dt_steps = 10000;
+        parameters.num_dt_steps = 100000;
         parameters.reset_chi_file = 0;
         parameters.delta_a = 12.0;
         parameters.L = (struct Vec3D){20.0, 8.0, 8.0}; // Set box dimensions for number of particles calculation

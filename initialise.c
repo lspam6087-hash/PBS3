@@ -241,12 +241,12 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
     double Lz = p_parameters->L.z;
     double half_box = 0.5 * Lx;
 
-    size_t chain_length = p_parameters->amount_mon;
-    size_t num_chains   = p_parameters->num_part / chain_length;
+    size_t N = p_parameters->amount_mon;
+    size_t num_chains   = p_parameters->num_part / N;
     size_t half_chains  = num_chains / 2;
 
     // Calculate lattice spacing based on particle number and box dimensions
-    double spacing = (0.7 * p_parameters->r_cut * chain_length) + 0; //adjust for different spacing over x axis
+    double spacing = (0.7 * p_parameters->r_cut * N) + 0; //adjust for different spacing over x axis
     n.i = (int) floor(half_box / spacing);
     if (n.i < 1)
         n.i = 1;
@@ -260,12 +260,9 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
     dr.x = half_box / (double)n.i;
     dr.y = Ly / (double)n.j;
     dr.z = Lz / (double)n.k;
-    ipart = 0;
-    imol = 0;
+ 
 
-    //First place particles A in left half
-    ipart = 0;
-    imol = 0;
+    //Place A in left half
     for (size_t i = 0; i < n.i && imol < half_chains; ++i)
     {
         for (size_t j = 0; j < n.j && imol < half_chains; ++j)
@@ -279,13 +276,13 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
 
                 build_polymer(p_parameters, molecule_center, p_vectors, ipart);
 
-                ipart += chain_length;
+                ipart += N;
                 imol++;
             }
         }
     }
 
-    //Then place particles B mirrored in right half
+    //Place B in right half
     imol = 0;
     for (size_t i = 0; i < n.i && ipart < p_parameters->num_part; ++i)
     {
@@ -301,7 +298,7 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
 
                 build_polymer(p_parameters, molecule_center, p_vectors, ipart);
 
-                ipart += chain_length;
+                ipart += N;
                 imol++;
             }
         }
