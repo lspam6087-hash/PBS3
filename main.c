@@ -113,6 +113,8 @@ int main(void)
 
     #ifdef HISTOGRAM
         initialize_hist(&parameters, &vectors, step, &p_vhist);
+        initialize_density_histograms(&parameters, &vectors);
+        initialize_phi_hist(&parameters, &vectors, &p_vhist);
     #endif
 
     // Main MD loop using velocity-Verlet integration
@@ -162,6 +164,7 @@ int main(void)
         #ifdef HISTOGRAM
             // Update the Histogram
             update_hist(&parameters, &vectors, step, &p_vhist);
+            accumulate_density_histogram(&parameters, &vectors);
             update_phi_hist(&parameters, &vectors, &p_vhist);
         #endif
 
@@ -179,12 +182,9 @@ int main(void)
     record_histogram_csv(&parameters, &p_vhist, step);
 
     // Density profile
-    initialize_density_histograms(&parameters, &vectors);
-    accumulate_density_histogram(&parameters, &vectors);
     write_density_histograms(&parameters, &vectors);
 
     // Chi parameter calculation and recording
-    initialize_phi_hist(&parameters, &vectors, &p_vhist);
     record_phi_histogram_csv(&parameters, &p_vhist);
     print_chi_csv(&parameters, &p_vhist);
 

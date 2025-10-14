@@ -141,9 +141,10 @@ struct Vectors
     struct Dihedral *dihedrals; //!< dihedrals
     double *grbin;              //!< Radial distribution initialisation
 
-    double *density_A;           //!< Density of type A particles
-    double *density_B;           //!< Density of type B particles
-    double *density_total;       //!< Density of particles
+    double *density_A;          //!< Density of type A particles
+    double *density_B;          //!< Density of type B particles
+    double *density_total;      //!< Density of particles
+    size_t density_samples;     //!< Number of samples taken for density histograms   
 };
 
 /**

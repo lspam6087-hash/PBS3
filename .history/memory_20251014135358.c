@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "structs.h"
+#include "nbrlist.h"
+
+// Allocate the arrays in 'vectors' needed to store information of all particles
+void alloc_vectors(struct Vectors *p_vectors, struct Parameters *p_parameters, size_t sz, struct VelHist *p_vhist)
+{
+    size_t nbin = p_parameters->nbin;
+    size_t nbin_dens = p_parameters->nbins_dens;
+    p_vectors->size = sz;
+    p_vectors->type = (int *)malloc(sz * sizeof(int));
+    p_vectors->r = (struct Vec3D *)malloc(sz * sizeof(struct Vec3D));
+    p_vectors->dr = (struct Vec3D *)malloc(sz * sizeof(struct Vec3D));
+    p_vectors->v = (struct Vec3D *)malloc(sz * sizeof(struct Vec3D));
+    p_vectors->f = (struct Vec3D *)malloc(sz * sizeof(struct Vec3D));
+    p_vectors->grbin = (double *)malloc(nbin * sizeof(double));
+    p_vectors->bonds = NULL;
+    p_vectors->num_bonds = 0;
+    p_vectors->angles = NULL;
+    p_vectors->num_angles = 0;
+    p_vectors->dihedrals = NULL;
+    p_vectors->num_dihedrals = 0;
+    p_vhist->counts = (size_t *)malloc(p_vhist->nbins * sizeof(size_t));
+    p_vhist->bin_centers = (double *)malloc(p_vhist->nbins * (sizeof(double)));
+    p_vhist->typeA_counts = (size_t *)malloc(p_vhist->nbins * (sizeof(size_t)));
+
+    p_vectors->density_A = (double *)malloc(nbin_dens * sizeof(double));
+    p_vectors->density_B = (double *)malloc(nbin_dens * sizeof(double));
+    p_vectors->density_total = (double *)malloc(nbin_dens * sizeof(double));
+}
+
+// Free the arrays in 'vectors'
+void free_vectors(struct Vectors *p_vectors, struct VelHist *p_vhist)
+{
+    free(p_vectors->type);
+    p_vectors->type = NULL;
+    free(p_vectors->r);
+    p_vectors->r = NULL;
+    free(p_vectors->dr);
+    p_vectors->dr = NULL;
+    free(p_vectors->v);
+    p_vectors->v = NULL;
+    free(p_vectors->f);
+    p_vectors->f = NULL;
+    free(p_vectors->bonds);
+    p_vectors->bonds = NULL;
+    free(p_vectors->angles);
+    p_vectors->angles = NULL;
+    free(p_vectors->dihedrals);
+    p_vectors->dihedrals = NULL;
+    free(p_vectors->grbin);
+    p_vectors->grbin = NULL;
+    free(p_vhist->counts);
+    p_vhist->counts = NULL;
+    free(p_vhist->bin_centers);
+    p_vhist->bin_centers = NULL;
+    free(p_vhist->bin_centers);
+    p_vhist->bin_centers = NULL;
+    p_vectors->size = 0;
+    p_vectors->num_bonds = 0;
+    p_vectors->num_angles = 0;
+    p_vectors->num_dihedrals = 0;
+
+    free(p_vectors->density_A);
+    p_vectors->density_A = NULL;
+    free(p_vectors->density_B);
+    p_vectors->density_B = NULL;
+    free(p_vectors->density_total);
+    p_vectors->density_total = NULL;
+}
+
+// Allocate all variables needed in the MD simulation
+void alloc_memory(struct Parameters *p_parameters, struct Vectors *p_vectors, struct Nbrlist *p_nbrlist, struct VelHist *p_vhist)
+{    
+    alloc_vectors(p_vectors, p_parameters, p_parameters->num_part, p_vhist);
+    alloc_nbrlist(p_parameters, p_nbrlist);
+}
+
+// Free the memory allocated by alloc_memory
+void free_memory(struct Vectors *p_vectors, struct Nbrlist *p_nbrlist, struct VelHist *p_vhist)
+{
+    free_vectors(p_vectors, p_vhist);
+    free_nbrlist(p_nbrlist);
+}

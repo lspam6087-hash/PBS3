@@ -6,11 +6,12 @@
 #include "structs.h"
 
 void initialize_density_histograms(struct Parameters *p_parameters, struct Vectors *p_vectors){
-    for (int i = 0; i < p_parameters->nbin; i++) {
+    for (int i = 0; i < p_parameters->nbins_dens; i++) {
         p_vectors->density_A[i] = 0.0;
         p_vectors->density_B[i] = 0.0;
         p_vectors->density_total[i] = 0.0;
     }
+    p_vectors->density_samples = 0;
 }
 
 
@@ -46,19 +47,21 @@ void accumulate_density_histogram(struct Parameters *p_parameters, struct Vector
         }
     }
 
-    // Normalize densities by bin volume
-    for (int i = 0; i < nbins; i++) {
-        density_A[i] /= bin_volume;
-        density_B[i] /= bin_volume;
-        density_total[i] /= bin_volume;
-    }
+    p_vectors->density_samples += 1;
 
-    double total_N = 0.0;
-    for (int i = 0; i < nbins; i++) {
-        total_N += density_total[i] * bin_volume;
-    }
-    // printing the total_N and num_part to check if they are equal
-    printf("Total N from density histogram: %.f\nNumber of particles: %lu\n", total_N, (long unsigned)num_particles);
+    // Normalize densities by bin volume
+    // for (int i = 0; i < nbins; i++) {
+    //     density_A[i] /= bin_volume;
+    //     density_B[i] /= bin_volume;
+    //     density_total[i] /= bin_volume;
+    // }
+
+    // double total_N = 0.0;
+    // for (int i = 0; i < nbins; i++) {
+    //     total_N += density_total[i] * bin_volume;
+    // }
+    // // printing the total_N and num_part to check if they are equal
+    // printf("Total N from density histogram: %.f\nNumber of particles: %lu\n", total_N, (long unsigned)num_particles);
 }
 
 void write_density_histograms(struct Parameters *p_parameters, struct Vectors *p_vectors) {
@@ -70,6 +73,8 @@ void write_density_histograms(struct Parameters *p_parameters, struct Vectors *p
 
     struct Vec3D L = p_parameters->L;
     double bin_width = L.x / nbins;
+    double bin_volume = bin_width * L.y * L.z;
+    double norm = bin_volume* p_vectors->density_samples;
 
     FILE *fp = fopen(p_parameters->filename_hist_dens, "w");
     if (!fp) {
@@ -81,7 +86,7 @@ void write_density_histograms(struct Parameters *p_parameters, struct Vectors *p
 
     for (int i = 0; i < nbins; i++) {
         double x_center = (i + 0.5) * bin_width;
-        fprintf(fp, "%f, %f, %f, %f\n", x_center, density_A[i], density_B[i], density_total[i]);
+        fprintf(fp, "%f, %f, %f, %f\n", x_center, density_A[i]/norm, density_B[i]/norm, density_total[i]/norm);
     }
 
     fclose(fp);

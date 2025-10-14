@@ -63,7 +63,7 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
   p_parameters->dbin = p_parameters->r_cut/p_parameters->nbin; //Bin width
 
   // These parameters are used for density profile calculation and plotting
-  p_parameters->nbins_dens = 25;                            // Number of bins for density histogram
+  p_parameters->nbins_dens = 200;                            // Number of bins for density histogram
   p_parameters->amount_mon = 1;                             // Amount of monomers in a polymer
   p_parameters->binary_mix = 1;                             // 1 for binary mixture, 0 for a single component system
 

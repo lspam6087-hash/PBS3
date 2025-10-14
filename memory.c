@@ -25,9 +25,9 @@ void alloc_vectors(struct Vectors *p_vectors, struct Parameters *p_parameters, s
     p_vhist->bin_centers = (double *)malloc(p_vhist->nbins * (sizeof(double)));
     p_vhist->typeA_counts = (size_t *)malloc(p_vhist->nbins * (sizeof(size_t)));
 
-    p_vectors->density_A = (double *)malloc(nbin * sizeof(double));
-    p_vectors->density_B = (double *)malloc(nbin * sizeof(double));
-    p_vectors->density_total = (double *)malloc(nbin * sizeof(double));
+    p_vectors->density_A = (double *)malloc(nbin_dens * sizeof(double));
+    p_vectors->density_B = (double *)malloc(nbin_dens * sizeof(double));
+    p_vectors->density_total = (double *)malloc(nbin_dens * sizeof(double));
 }
 
 // Free the arrays in 'vectors'

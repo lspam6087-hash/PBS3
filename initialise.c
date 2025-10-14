@@ -214,11 +214,15 @@ void initialise(struct Parameters *p_parameters, struct Vectors *p_vectors, stru
 void build_polymer(struct Parameters *p_parameters, struct Vec3D molecule_center, struct Vectors *p_vectors, int ipart)
 {
     size_t N = p_parameters->amount_mon;
+    double half = 0.0;
 
-    for (size_t n = ipart; n < N; n++){
-        p_vectors->r[n].x = molecule_center.x + 1.54 * (n - ipart);
-        p_vectors->r[n].y = molecule_center.y;
-        p_vectors->r[n].z = molecule_center.z;
+    if (N>1)
+        half = 0.5 * (N-1)*0.7;
+
+    for (size_t n = 0; n < N; n++){
+        p_vectors->r[ipart + n].x = molecule_center.x + 0.7 * n - half;
+        p_vectors->r[ipart + n].y = molecule_center.y;
+        p_vectors->r[ipart + n].z = molecule_center.z;
     }
 }
 
@@ -230,30 +234,109 @@ void initialise_positions(struct Parameters *p_parameters, struct Vectors *p_vec
     struct Index3D n; // Number of grid cells along each axis
     double dl;        // Lattice spacing
     int ipart = 0;    // Particle index
+    int imol  = 0;
+
+    double Lx = p_parameters->L.x;
+    double Ly = p_parameters->L.y;
+    double Lz = p_parameters->L.z;
+    double half_box = 0.5 * Lx;
+
+    size_t chain_length = p_parameters->amount_mon;
+    size_t num_chains   = p_parameters->num_part / chain_length;
+    size_t half_chains  = num_chains / 2;
 
     // Calculate lattice spacing based on particle number and box dimensions
-    dl = pow(p_parameters->L.x * p_parameters->L.y * p_parameters->L.z / ((double)p_parameters->num_part), 1.0 / 3.0);
-    n.i = (int)ceil(p_parameters->L.x / dl);
-    n.j = (int)ceil(p_parameters->L.y / dl);
-    n.k = (int)ceil(p_parameters->L.z / dl);
-    dr.x = p_parameters->L.x / (double)n.i;
-    dr.y = p_parameters->L.y / (double)n.j;
-    dr.z = p_parameters->L.z / (double)n.k;
+    double spacing = (0.7 * p_parameters->r_cut * chain_length) + 0; //adjust for different spacing over x axis
+    n.i = (int) floor(half_box / spacing);
+    if (n.i < 1)
+        n.i = 1;
+
+    int mol_per_layer = (int) ceil((double) half_chains / n.i);
+    n.j = (int) floor(sqrt(mol_per_layer));
+    if (n.j < 1)
+        n.j = 1;
+    n.k = (int) ceil((double) mol_per_layer / n.j);
+
+    dr.x = half_box / (double)n.i;
+    dr.y = Ly / (double)n.j;
+    dr.z = Lz / (double)n.k;
     ipart = 0;
-    for (size_t i = 0; i < n.i; ++i)
-        for (size_t j = 0; j < n.j; ++j)
-            for (size_t k = 0; k < n.k; ++k, ++ipart)
+    imol = 0;
+
+    //First place particles A in left half
+    ipart = 0;
+    imol = 0;
+    for (size_t i = 0; i < n.i && imol < half_chains; ++i)
+    {
+        for (size_t j = 0; j < n.j && imol < half_chains; ++j)
+        {
+            for (size_t k = 0; k < n.k && imol < half_chains; ++k)
             {
-                if (ipart >= p_parameters->num_part)
-                    break;
-                p_vectors->r[ipart].x = (i + 0.5) * dr.x;
-                p_vectors->r[ipart].y = (j + 0.5) * dr.y;
-                p_vectors->r[ipart].z = (k + 0.5) * dr.z;
-                //      p_vectors->r[ipart].x = p_parameters->L.x*generate_uniform_random();
-                //      p_vectors->r[ipart].y = p_parameters->L.y*generate_uniform_random();
-                //      p_vectors->r[ipart].z = p_parameters->L.z*generate_uniform_random();
+                struct Vec3D molecule_center;
+                molecule_center.x = (i + 0.5) * dr.x; 
+                molecule_center.y = (j + 0.5) * dr.y;
+                molecule_center.z = (k + 0.5) * dr.z;
+
+                build_polymer(p_parameters, molecule_center, p_vectors, ipart);
+
+                ipart += chain_length;
+                imol++;
             }
+        }
+    }
+
+    //Then place particles B mirrored in right half
+    imol = 0;
+    for (size_t i = 0; i < n.i && ipart < p_parameters->num_part; ++i)
+    {
+        for (size_t j = 0; j < n.j && ipart < p_parameters->num_part; ++j)
+        {
+            for (size_t k = 0; k < n.k && ipart < p_parameters->num_part; ++k)
+            {
+                struct Vec3D molecule_center;
+                double x_local = (i + 0.5) * dr.x;
+                molecule_center.x = Lx - x_local;
+                molecule_center.y = (j + 0.5) * dr.y;
+                molecule_center.z = (k + 0.5) * dr.z;
+
+                build_polymer(p_parameters, molecule_center, p_vectors, ipart);
+
+                ipart += chain_length;
+                imol++;
+            }
+        }
+   }
 }
+
+// {
+//     struct Vec3D dr;  // Displacement vector for positioning particles
+//     struct Index3D n; // Number of grid cells along each axis
+//     double dl;        // Lattice spacing
+//     int ipart = 0;    // Particle index
+
+//     // Calculate lattice spacing based on particle number and box dimensions
+//     dl = pow(p_parameters->L.x * p_parameters->L.y * p_parameters->L.z / ((double)p_parameters->num_part), 1.0 / 3.0);
+//     n.i = (int)ceil(p_parameters->L.x / dl);
+//     n.j = (int)ceil(p_parameters->L.y / dl);
+//     n.k = (int)ceil(p_parameters->L.z / dl);
+//     dr.x = p_parameters->L.x / (double)n.i;
+//     dr.y = p_parameters->L.y / (double)n.j;
+//     dr.z = p_parameters->L.z / (double)n.k;
+//     ipart = 0;
+//     for (size_t i = 0; i < n.i; ++i)
+//         for (size_t j = 0; j < n.j; ++j)
+//             for (size_t k = 0; k < n.k; ++k, ++ipart)
+//             {
+//                 if (ipart >= p_parameters->num_part)
+//                     break;
+//                 p_vectors->r[ipart].x = (i + 0.5) * dr.x;
+//                 p_vectors->r[ipart].y = (j + 0.5) * dr.y;
+//                 p_vectors->r[ipart].z = (k + 0.5) * dr.z;
+//                 //      p_vectors->r[ipart].x = p_parameters->L.x*generate_uniform_random();
+//                 //      p_vectors->r[ipart].y = p_parameters->L.y*generate_uniform_random();
+//                 //      p_vectors->r[ipart].z = p_parameters->L.z*generate_uniform_random();
+//             }
+// }
 
 // This function initializes the velocities of particles based on the Maxwell-Boltzmann distribution.
 // The total momentum is also removed to ensure zero total momentum (important for stability).
