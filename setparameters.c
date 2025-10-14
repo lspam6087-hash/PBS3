@@ -38,17 +38,17 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
   p_parameters->rho = 3;                                    //Number density
 
 // The parameters below control core functionalities of the code, but many values will need to be changed
-  p_parameters->num_part = 376;                            //number of particles
-  p_parameters->num_dt_steps = 2500;                        //number of time steps
+  p_parameters->num_part = 4;                            //number of particles
+  p_parameters->num_dt_steps = 25000;                        //number of time steps
   p_parameters->sample_interval = 10;                       // Sample interval
   p_parameters->exclude_12_nb = 0;                          // 1-2 connected atoms exluded from non-bonded interactions 
   p_parameters->exclude_13_nb = 0;                          // 1-3 connected atoms exluded from non-bonded interactions    
   p_parameters->dt = 0.01;                                  //integration time step
   p_parameters->r_cut = 1.0;                                //cut-off distance used for neigbor list
   // double Lbox = box_size(p_parameters);
-  p_parameters->L = (struct Vec3D){5.0, 5.0, 5.0};          //Box size
+  p_parameters->L = (struct Vec3D){2.1, 2.1, 2.1};          //Box size
   p_parameters->r_shell = 0.4;                              //shell thickness for neighbor list
-  p_parameters->num_dt_pdb = 500;                           //number of time steps in between pdb outputs
+  p_parameters->num_dt_pdb = 50;                           //number of time steps in between pdb outputs
   strcpy(p_parameters->filename_pdb, "trajectories");       //filename (without extension) for pdb file
   strcpy(p_parameters->filename_hist, "data/vel_histogramB3.csv");//filename histogram velocity
   strcpy(p_parameters->filename_hist_dens, "data/dens_histogramC2.csv");//filename histogram density
@@ -78,7 +78,7 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
 
 
   // Parameters for the velocity histogram
-  p_vhist->nbins = 100;                                      //Number of bins
+  p_vhist->nbins = 1000;                                      //Number of bins
   p_vhist->vmin = 0.0;                                      //Min velocity
   p_vhist->vmax = 30.0;                                     //Max velocity
   p_vhist->bin_width = (p_vhist->vmax-p_vhist->vmin)/p_vhist->nbins;

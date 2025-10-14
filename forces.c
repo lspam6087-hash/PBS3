@@ -26,7 +26,7 @@ double calculate_forces(struct Parameters *p_parameters, struct Nbrlist *p_nbrli
 
     // Calculate the forces and accumulate the potential energy from each type of interaction
     double Epot = 0.0;
-    // Epot = calculate_forces_bond(p_parameters, p_vectors);
+    Epot = calculate_forces_bond(p_parameters, p_vectors);
     Epot += calculate_forces_nb(p_parameters, p_nbrlist, p_vectors);
     
     return Epot;

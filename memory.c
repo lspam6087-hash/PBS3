@@ -7,6 +7,7 @@
 void alloc_vectors(struct Vectors *p_vectors, struct Parameters *p_parameters, size_t sz, struct VelHist *p_vhist)
 {
     size_t nbin = p_parameters->nbin;
+    size_t nbin_dens = p_parameters->nbins_dens;
     p_vectors->size = sz;
     p_vectors->type = (int *)malloc(sz * sizeof(int));
     p_vectors->r = (struct Vec3D *)malloc(sz * sizeof(struct Vec3D));

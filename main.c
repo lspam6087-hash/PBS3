@@ -74,10 +74,10 @@ int main(void)
     set_parameters(&parameters, &p_vhist); 
 
     #ifdef NUMPART_CALC
-        parameters.num_dt_steps = 25000;
+        parameters.num_dt_steps = 10000;
         parameters.reset_chi_file = 0;
-        parameters.delta_a = 36.0;
-        parameters.L = (struct Vec3D){8.0, 8.0, 20.0}; // Set box dimensions for number of particles calculation
+        parameters.delta_a = 12.0;
+        parameters.L = (struct Vec3D){20.0, 8.0, 8.0}; // Set box dimensions for number of particles calculation
         num_part_calc(&parameters);
     #endif
 
@@ -148,7 +148,7 @@ int main(void)
         grcount = update_grf2(&parameters, &nbrlist, &vectors);
 
         // Update the Histogram
-        update_hist(&parameters, &vectors, step, &p_vhist);
+        // update_hist(&parameters, &vectors, step, &p_vhist);
 
         // Output system state every 'num_dt_pdb' steps
         if (step % parameters.num_dt_pdb == 0) 
@@ -162,6 +162,7 @@ int main(void)
         #ifdef HISTOGRAM
             // Update the Histogram
             update_hist(&parameters, &vectors, step, &p_vhist);
+            update_phi_hist(&parameters, &vectors, &p_vhist);
         #endif
 
         // Print to the screen to monitor the progress of the simulation
@@ -184,7 +185,6 @@ int main(void)
 
     // Chi parameter calculation and recording
     initialize_phi_hist(&parameters, &vectors, &p_vhist);
-    update_phi_hist(&parameters, &vectors, &p_vhist);
     record_phi_histogram_csv(&parameters, &p_vhist);
     print_chi_csv(&parameters, &p_vhist);
 

@@ -27,10 +27,17 @@ void record_trajectories_pdb(int reset, struct Parameters *p_parameters, struct 
   fprintf(fp_traj, "MODEL\n");
   fprintf(fp_traj, "REMARK TIME = %f\n", time);
   fprintf(fp_traj, "CRYST1%9.3f%9.3f%9.3f%7.2f%7.2f%7.2f %-10s%-3s\n", rs*p_parameters->L.x, rs*p_parameters->L.y, rs*p_parameters->L.z, 90.0, 90.0, 90.0, "P 1", "1");
-  for (size_t i = 0; i < p_parameters->num_part; i++)
-  {
-    fprintf(fp_traj, "HETATM%5u  C   UNK A   1    %8.3f%8.3f%8.3f  1.00  0.00           C\n", (unsigned int)i % 100000, rs*p_vectors->r[i].x, rs*p_vectors->r[i].y, rs*p_vectors->r[i].z);
-  }
+  for (size_t i = 0; i < p_parameters->num_part; i++) {
+    int type = p_vectors->type[i];   // e.g., 0 = A, 1 = B
+    const char *atom_name = (type == 0) ? "A" : "B";
+    const char *element   = (type == 0) ? "C" : "N";  // choose any two valid elements
+
+    fprintf(fp_traj,
+        "HETATM%5u %-4s UNK A%4d    %8.3f%8.3f%8.3f  1.00  0.00          %2s\n",
+        (unsigned int)(i % 100000), atom_name, 1,
+        rs*p_vectors->r[i].x, rs*p_vectors->r[i].y, rs*p_vectors->r[i].z,
+        element);
+}
   fprintf(fp_traj, "ENDMDL\n");
 
   fclose(fp_traj);
