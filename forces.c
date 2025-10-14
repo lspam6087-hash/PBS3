@@ -127,7 +127,7 @@ double calculate_forces_nb(struct Parameters *p_parameters, struct Nbrlist *p_nb
         rij_hat.z = (1.0/rij_norm) * rij.z;
         
         if (type_i == type_j){
-            a_ij = 75.0/3.0; //3 is here the number density of water
+            a_ij = 75.0/3.0; 
         }
         else {
             a_ij = 75.0/3.0 + delta_a;
