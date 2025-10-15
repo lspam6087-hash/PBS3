@@ -108,7 +108,6 @@ double update_grf2(struct Parameters *p_parameters, struct Nbrlist *p_nbrlist, s
 
     double Epot = 0.0;
 
-    //size_t grcount = p_parameters->grcount;
     size_t nbin = p_parameters->nbin;
     double dbin = p_parameters->dbin;
 
@@ -124,13 +123,6 @@ double update_grf2(struct Parameters *p_parameters, struct Nbrlist *p_nbrlist, s
 
         double type_i = p_vectors->type[i];
         double type_j = p_vectors->type[j];
-        
-        /*double rij_norm = (rij.x*rij.x + rij.y*rij.y + rij.z*rij.z);
-        struct Vec3D rij_hat = {0.0, 0.0, 0.0};
-        rij_hat.x = (1.0/rij_norm) * rij.x;
-        rij_hat.y = (1.0/rij_norm) * rij.y;
-        rij_hat.z = (1.0/rij_norm) * rij.z;
-        */
 
         // Compute forces if the distance is smaller than the cutoff distance
         if (sqrt(rij.sq) < sqrt(r_cutsq))

@@ -41,7 +41,6 @@
 #include "density.h"
 #include "parametercalc.h"
 
-#define INCLUDE_FORCES // If B2 needs to be checked. This needs to be commented
 #define HISTOGRAM
 #define NUMPART_CALC
 
@@ -77,6 +76,7 @@ int main(void)
         parameters.num_dt_steps = 100000;
         parameters.reset_chi_file = 0;
         parameters.delta_a = 12.0;
+        parameters.amount_mon = 7;
         parameters.L = (struct Vec3D){20.0, 8.0, 8.0}; // Set box dimensions for number of particles calculation
         num_part_calc(&parameters);
     #endif
@@ -148,9 +148,6 @@ int main(void)
         // Update the GRF
         // grcount = update_grf(&parameters, &vectors);
         grcount = update_grf2(&parameters, &nbrlist, &vectors);
-
-        // Update the Histogram
-        // update_hist(&parameters, &vectors, step, &p_vhist);
 
         // Output system state every 'num_dt_pdb' steps
         if (step % parameters.num_dt_pdb == 0) 
