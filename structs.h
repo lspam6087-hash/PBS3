@@ -42,7 +42,8 @@ struct Parameters
     char filename_pdb[1024]; //!< filename (without extension) for pdb file
     char filename_xyz[1024]; //!< filename (without extension) for pdb file
     char filename_hist[1024]; //!< filename histogram
-    char filename_hist_dens[1024]; //!< filename histogram desnity
+    char filename_hist_chi[1024]; //!< filename histogram chi
+    char filename_hist_dens[1024]; //!< filename histogram density
     char load_restart;       //!< if equal 1 restart file is loaded
     size_t num_dt_restart;   //!< Number of time steps between saves of restart file
     char restart_in_filename[1024];  //!< filename for loaded restart file

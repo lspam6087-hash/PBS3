@@ -1,5 +1,5 @@
 # PBS3
-For the third assignment of Particle Based Simulations given at the Eindhoven University of Technology, it was tasked to implement code to implement code to make a simulation technique called Dissipative Particle Dynamics. The following file describes the made files by the students for the simulation technique.
+For the third assignment of Particle Based Simulations given at the Eindhoven University of Technology, it was tasked to implement code to make a simulation technique called Dissipative Particle Dynamics. The following file describes the made files by the students for the simulation technique.
 
 # Running the simulation
 In the 'main.c' file, the main loop code is presented. On line 44 and 45, there are definitions that can be commented to save on computation time. Each of the definitions have different functions:

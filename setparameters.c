@@ -52,6 +52,7 @@ void set_parameters(struct Parameters *p_parameters, struct VelHist *p_vhist)
   strcpy(p_parameters->filename_pdb, "trajectories");       //filename (without extension) for pdb file
   strcpy(p_parameters->filename_hist, "data/vel_histogramB3.csv");//filename histogram velocity
   strcpy(p_parameters->filename_hist_dens, "data/dens_histogramC2.csv");//filename histogram density
+  strcpy(p_parameters->filename_hist_chi, "data/chi_histogramC3.csv");//filename histogram chi
   p_parameters->rescale_output = 1;                         //factor used to rescale output lengthscale (Most visualisation programs identify bonds based on distances of order 1)
   p_parameters->load_restart = 0;                           //if equal 1 restart file is loaded
   strcpy(p_parameters->restart_in_filename, "restart.dat"); //filename for loaded restart file

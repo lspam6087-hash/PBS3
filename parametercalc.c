@@ -139,7 +139,7 @@ void record_phi_histogram_csv(struct Parameters *p_parameters,struct VelHist *p_
 {
     FILE *fp_hist;
     char filename[1024];
-    snprintf(filename, 1024, "%s", p_parameters->filename_hist);
+    snprintf(filename, 1024, "%s", p_parameters->filename_hist_chi);
 
     fp_hist = fopen(filename, "w");
     if (!fp_hist) {
